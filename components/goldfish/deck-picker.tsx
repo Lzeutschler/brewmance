@@ -47,7 +47,7 @@ export function GoldfishDeckPicker() {
                 style={art ? { backgroundImage: `url(${art})` } : undefined}
               />
               <div className="min-w-0 flex-1">
-                <div className="truncate text-lg leading-tight font-bold [font-family:var(--font-heading)]">{deck.name}</div>
+                <div className="truncate text-lg leading-tight font-medium [font-family:var(--font-heading)]">{deck.name}</div>
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
                   <ColorIdentity colors={deckIdentity(deck)} />
                   <span className={count === mainDeckSize(deck) ? "tabular-nums" : "text-brand tabular-nums"}>

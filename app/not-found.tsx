@@ -14,7 +14,7 @@ export default function NotFound() {
         <SpilledCauldron className="text-[5px] sm:text-[6px]" />
         <span className="numeral rounded-sm bg-brand px-2 py-1 text-3xl text-ink shadow-md">404</span>
       </div>
-      <h1 className="text-4xl leading-tight font-extrabold">This card isn&apos;t in the library</h1>
+      <h1 className="text-4xl leading-tight font-medium">This card isn&apos;t in the library</h1>
       <p className="text-muted-foreground">
         The page you were looking for doesn&apos;t exist or has been exiled. Decks live in the browser they were built
         in; to open one on another device, use Share on the deck page and send that link.

@@ -197,7 +197,7 @@ function Stack({ cards, handlers }: { cards: GameCard[]; handlers: CardHandlers 
           <GameCardView card={card} handlers={handlers} className="mx-0" />
         </div>
       ))}
-      <span className="pointer-events-none absolute -top-2 -right-2 z-20 grid h-6 min-w-6 place-items-center rounded-sm bg-ink px-1 text-xs font-bold tabular-nums shadow-md ring-1 ring-white/15">
+      <span className="pointer-events-none absolute -top-2 -right-2 z-20 grid h-6 min-w-6 place-items-center rounded-sm bg-ink px-1 text-xs font-semibold tabular-nums shadow-md ring-1 ring-white/15">
         ×{cards.length}
       </span>
     </div>
@@ -329,7 +329,7 @@ export function Pile({
 function PileBadge({ children }: { children: string | undefined }) {
   if (!children) return null;
   return (
-    <span className="pointer-events-none absolute -top-2 -right-2 rounded-sm bg-brand px-1.5 py-0.5 text-[11px] font-bold text-primary-foreground shadow-md">
+    <span className="pointer-events-none absolute -top-2 -right-2 rounded-sm bg-brand px-1.5 py-0.5 text-[11px] font-semibold text-primary-foreground shadow-md">
       {children}
     </span>
   );

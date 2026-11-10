@@ -40,8 +40,8 @@ export function DeckStatsPanel({ deck }: { deck: Deck }) {
     totalPips && stats.pips[color] ? Math.round(stats.lands * (0.25 + (0.75 * stats.pips[color]) / totalPips)) : 0;
 
   return (
-    <div className="space-y-4">
-      <section className="panel space-y-3 p-4">
+    <div className="panel divide-y divide-border">
+      <section className="space-y-3 p-4">
         <div className="flex items-baseline justify-between">
           <span className="numeral text-5xl">
             {stats.total}
@@ -62,20 +62,22 @@ export function DeckStatsPanel({ deck }: { deck: Deck }) {
               : `Frank Karsten's formula suggests about ${karsten} lands for this curve and ${stats.cheapRampDraw} cheap ramp/draw spells`}
           </StatusLine>
         )}
-        <div className="grid grid-cols-3 gap-2 pt-1 text-center text-xs">
-          <Metric label="avg. mana value" value={stats.averageManaValue.toFixed(2)} />
-          <Metric label={`lands (target ${template.lands})`} value={String(stats.lands)} />
-          <Metric label="est. price" value={`$${Math.round(stats.priceUsd)}`} />
-          <Metric
-            label={template.maxTutors === null ? "tutors" : `tutors (max. ${template.maxTutors})`}
-            value={String(stats.tutors)}
-          />
-          <Metric label="interaction ≤2 mana" value={String(stats.cheapInteraction)} />
-          <Metric label="ramp & draw ≤2 mana" value={String(stats.cheapRampDraw)} />
-        </div>
       </section>
 
-      <section className="panel space-y-2 p-4">
+      {/* Key figures as plain numbers on a hairline grid. */}
+      <dl className="grid grid-cols-3 [&>div]:border-border [&>div:nth-child(-n+3)]:border-b [&>div:nth-child(3n+2)]:border-x">
+        <Metric label="avg. mana value" value={stats.averageManaValue.toFixed(2)} />
+        <Metric label={`lands (target ${template.lands})`} value={String(stats.lands)} />
+        <Metric label="est. price" value={`$${Math.round(stats.priceUsd)}`} />
+        <Metric
+          label={template.maxTutors === null ? "tutors" : `tutors (max. ${template.maxTutors})`}
+          value={String(stats.tutors)}
+        />
+        <Metric label="interaction ≤2 mana" value={String(stats.cheapInteraction)} />
+        <Metric label="ramp & draw ≤2 mana" value={String(stats.cheapRampDraw)} />
+      </dl>
+
+      <section className="space-y-2 p-4">
         <h3 className="ui-label text-muted-foreground">Mana curve</h3>
         <div className="h-36">
           <ResponsiveContainer width="100%" height="100%">
@@ -93,12 +95,12 @@ export function DeckStatsPanel({ deck }: { deck: Deck }) {
         </div>
       </section>
 
-      <section className="panel space-y-3 p-4">
+      <section className="space-y-3 p-4">
         <h3 className="ui-label text-muted-foreground">Roles</h3>
-        <RoleMeters stats={stats} template={template} />
+        <RoleMeters stats={stats} template={template} quiet />
       </section>
 
-      <section className="panel space-y-2 p-4">
+      <section className="space-y-2 p-4">
         <h3 className="ui-label text-muted-foreground">Combos</h3>
         {combosQuery.isError ? (
           <p className="text-xs text-muted-foreground">Commander Spellbook is unavailable right now.</p>
@@ -119,7 +121,7 @@ export function DeckStatsPanel({ deck }: { deck: Deck }) {
       </section>
 
       {colors.length > 0 && (
-        <section className="panel space-y-2 p-4">
+        <section className="space-y-2 p-4">
           <h3 className="ui-label text-muted-foreground">Colors: pips vs. land sources</h3>
           <table className="w-full text-sm">
             <tbody>
@@ -144,7 +146,7 @@ export function DeckStatsPanel({ deck }: { deck: Deck }) {
         </section>
       )}
 
-      <section className="panel space-y-2 p-4">
+      <section className="space-y-2 p-4">
         <h3 className="ui-label text-muted-foreground">Card types</h3>
         <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
           {CARD_TYPES.filter((type) => stats.types[type]).map((type) => (
@@ -162,7 +164,7 @@ export function DeckStatsPanel({ deck }: { deck: Deck }) {
 function StatusLine({ ok, children }: { ok: boolean; children: React.ReactNode }) {
   const Icon = ok ? CheckCircleIcon : WarningIcon;
   return (
-    <p className={cn("flex items-start gap-2 text-sm", ok ? "text-pick" : "text-brand")}>
+    <p className={cn("flex items-start gap-2 text-sm", ok ? "text-pick" : "text-ember")}>
       <Icon className="mt-0.5 size-4 shrink-0" />
       <span>{children}</span>
     </p>
@@ -171,9 +173,9 @@ function StatusLine({ ok, children }: { ok: boolean; children: React.ReactNode }
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="panel-inset p-2">
-      <div className="numeral text-2xl">{value}</div>
-      <div className="mt-1 text-[11px] leading-tight text-muted-foreground">{label}</div>
+    <div className="flex flex-col-reverse gap-1 px-4 py-3">
+      <dt className="text-xs leading-tight text-muted-foreground">{label}</dt>
+      <dd className="numeral text-2xl">{value}</dd>
     </div>
   );
 }

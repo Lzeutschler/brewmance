@@ -65,7 +65,7 @@ function SharedQuizView({ quiz }: { quiz: ResolvedSharedQuiz }) {
             <p className="ui-label text-muted-foreground">
               Commander match for {quiz.track === "beginner" ? "a newcomer" : "an experienced player"}
             </p>
-            <h1 className="text-3xl leading-tight font-extrabold md:text-4xl">{top.card.name}</h1>
+            <h1 className="text-3xl leading-tight font-medium md:text-4xl">{top.card.name}</h1>
             <p className="numeral text-2xl text-brand">{top.percent}% match</p>
           </div>
           {top.reasons.length > 0 && <Reasons reasons={top.reasons} />}
@@ -88,7 +88,7 @@ function SharedQuizView({ quiz }: { quiz: ResolvedSharedQuiz }) {
 
       {others.length > 0 && (
         <section className="space-y-4">
-          <h2 className="text-2xl font-bold">Also on the shortlist</h2>
+          <h2 className="text-2xl font-medium">Also on the shortlist</h2>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
             {others.map(({ card, percent, reasons }) => (
               <div key={card.id} className="space-y-2">

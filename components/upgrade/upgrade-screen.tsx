@@ -147,7 +147,7 @@ function UpgradeSetup({ deck }: { deck: Deck }) {
         </div>
         <div className="min-w-0 space-y-6">
           <div className="space-y-1.5">
-            <h1 className="text-3xl leading-tight font-bold sm:text-4xl">Upgrade {deck.name}</h1>
+            <h1 className="text-3xl leading-tight font-medium sm:text-4xl">Upgrade {deck.name}</h1>
             <p className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
               <ColorIdentity colors={deckIdentity(deck)} />
               {commanderTitle(deck)}
@@ -277,7 +277,7 @@ function UpgradeBoard({ deck, session, pool }: { deck: Deck; session: UpgradeSes
             ))}
           </div>
           <div className="min-w-0">
-            <div className="truncate font-heading text-lg leading-tight font-bold">{deck.name}</div>
+            <div className="truncate font-heading text-lg leading-tight font-medium">{deck.name}</div>
             <div className="text-xs text-muted-foreground">
               Bracket {deck.bracket} · {BRACKET_INFO[deck.bracket].name}
               {deck.settings.preferences.maxPriceUsd !== null ? ` · up to $${deck.settings.preferences.maxPriceUsd} per card` : ""}
@@ -435,7 +435,7 @@ function CutStrip({ swap, reason, onKeep, onInspect }: { swap: Swap; reason?: st
       </CardHoverPreview>
       <div className="min-w-0 flex-1">
         <div className="ui-label text-xs text-pass">Swap out</div>
-        <div className="truncate font-heading text-lg leading-tight font-bold" data-testid="cut-name">
+        <div className="truncate font-heading text-lg leading-tight font-medium" data-testid="cut-name">
           {swap.out.name}
         </div>
         {reason && <p className="truncate text-xs text-muted-foreground">{reason}</p>}
@@ -466,7 +466,10 @@ function UpgradeCounter({ swaps, spent, budget }: { swaps: number; spent: number
       </div>
       {budget !== null && (
         <div className="h-2 overflow-hidden rounded-xs bg-ink shadow-[inset_0_1px_0_0_oklch(0_0_0/40%)]">
-          <div className="h-full bg-brand transition-all duration-500" style={{ width: `${Math.min(100, (spent / budget) * 100)}%` }} />
+          <div
+            className="h-full origin-left bg-brand transition-transform duration-500"
+            style={{ transform: `scaleX(${budget > 0 ? Math.min(1, spent / budget) : 1})` }}
+          />
         </div>
       )}
     </div>
@@ -527,7 +530,7 @@ function UpgradeSummary({
   return (
     <div className="panel flex w-full max-w-md flex-col items-center gap-4 p-6 text-center sm:p-8" data-testid="upgrade-summary">
       {made.length > 0 && <CelebrationCauldron className="-mt-2 text-[4.5px]" />}
-      <h2 className="text-2xl font-bold">{made.length > 0 ? "A better match" : swapsLeft ? "No swaps yet" : "Nothing to swap"}</h2>
+      <h2 className="text-2xl font-medium">{made.length > 0 ? "A better match" : swapsLeft ? "No swaps yet" : "Nothing to swap"}</h2>
       <p className="text-muted-foreground">
         {made.length > 0
           ? `${made.length} ${made.length === 1 ? "swap" : "swaps"}, about $${spent.toFixed(2)} of new cards. ${deck.name} kept its ${mainDeckSize(deck)} cards and its land count.`

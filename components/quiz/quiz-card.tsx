@@ -143,7 +143,7 @@ function YesNoFace({
       {kicker && <Kicker>{kicker}</Kicker>}
       <div className="absolute inset-x-0 bottom-0 space-y-1.5 p-[7%]">
         {symbol && <ManaSymbol symbol={symbol} className="size-8 drop-shadow-lg" />}
-        <h2 className="text-[1.65rem] leading-[1.05] font-extrabold @[21rem]:text-[2.1rem]">{title}</h2>
+        <h2 className="text-[1.65rem] leading-[1.05] font-semibold @[21rem]:text-[2.1rem]">{title}</h2>
         {description && <p className="text-sm leading-snug text-foreground/75 @[21rem]:text-base">{description}</p>}
       </div>
       <Stamp label="YES" className="top-[16%] left-[7%] -rotate-12 border-pick text-pick" opacity={yes} />
@@ -198,7 +198,7 @@ function VersusFace({
         <motion.line x1={top} y1={0} x2={bottom} y2={100} stroke="var(--brand)" strokeWidth={2} vectorEffect="non-scaling-stroke" />
       </svg>
       <motion.span
-        className="absolute top-1/2 grid size-12 -translate-1/2 place-items-center rounded-full border-2 border-brand bg-ink font-heading text-xl font-extrabold text-brand italic shadow-lg"
+        className="absolute top-1/2 grid size-12 -translate-1/2 place-items-center rounded-full border-2 border-brand bg-ink font-heading text-xl font-semibold text-brand italic shadow-lg"
         style={{ left: badgeLeft }}
         aria-hidden="true"
       >
@@ -237,7 +237,7 @@ function VersusLabel({ option, arrow, className }: { option: AnswerOption; arrow
       <span className="ui-label text-brand" aria-hidden="true">
         {arrow}
       </span>
-      <h2 className="text-[1.35rem] leading-[1.05] font-extrabold @[21rem]:text-[1.7rem]">{option.label}</h2>
+      <h2 className="text-[1.35rem] leading-[1.05] font-semibold @[21rem]:text-[1.7rem]">{option.label}</h2>
       {option.description && <p className="text-xs leading-snug text-foreground/80 @[21rem]:text-sm">{option.description}</p>}
     </div>
   );
@@ -262,7 +262,7 @@ function PickFace({
   return (
     <CardShell className="flex flex-col gap-[2.5%] p-[5%]">
       <header className="space-y-0.5 text-center">
-        <h2 className="text-xl leading-tight font-extrabold @[21rem]:text-2xl">{question.title}</h2>
+        <h2 className="text-xl leading-tight font-semibold @[21rem]:text-2xl">{question.title}</h2>
         {question.subtitle && <p className="text-xs text-muted-foreground @[21rem]:text-sm">{question.subtitle}</p>}
       </header>
       <div

@@ -157,7 +157,7 @@ function WhyThisFits({ scored, topScore }: { scored: ScoredCommander; topScore: 
     <div className="panel space-y-4 p-5">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <h2 className="font-heading text-2xl leading-tight font-bold">{commander.name}</h2>
+          <h2 className="font-heading text-2xl leading-tight font-medium">{commander.name}</h2>
           <p className="mt-1 text-xs text-muted-foreground">{commander.typeLine}</p>
         </div>
         <ManaCost cost={commander.manaCost} className="shrink-0 pt-1" />
@@ -288,7 +288,7 @@ function RoundDone({
       ) : (
         <Cauldron mood="empty" className="text-[4.5px]" />
       )}
-      <h2 className="text-2xl font-bold">{shortlisted ? "It's a brew!" : "Nothing caught your eye?"}</h2>
+      <h2 className="text-2xl font-medium">{shortlisted ? "It's a brew!" : "Nothing caught your eye?"}</h2>
       <p className="text-muted-foreground">
         You looked at {seen} commanders and kept {shortlisted}.{" "}
         {shortlisted ? "Choose one from your shortlist to build a deck." : "Keep swiping or change your answers."}

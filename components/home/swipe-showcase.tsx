@@ -72,7 +72,7 @@ export function SwipeShowcase({ className }: { className?: string }) {
                 />
                 <span
                   className={cn(
-                    "absolute top-[14%] animate-[brew-swipe-stamp_12s_ease-out_infinite_both] rounded-[0.4em] border-[0.2em] bg-black/50 px-[0.4em] py-[0.05em] font-heading text-[1.6em] font-bold tracking-widest motion-reduce:hidden",
+                    "absolute top-[14%] animate-[brew-swipe-stamp_12s_ease-out_infinite_both] rounded-[0.4em] border-[0.2em] bg-black/50 px-[0.4em] py-[0.05em] font-heading text-[1.6em] font-semibold tracking-widest motion-reduce:hidden",
                     right ? "left-[8%] -rotate-12 border-pick text-pick" : "right-[8%] rotate-12 border-pass text-pass",
                   )}
                   style={{ animationDelay: delay }}

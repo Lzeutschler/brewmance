@@ -85,7 +85,7 @@ export function Stamp({
   return (
     <motion.span
       style={{ opacity }}
-      className={cn("pointer-events-none absolute rounded-lg border-4 bg-black/50 px-3 py-1 font-heading text-3xl font-bold tracking-widest", className)}
+      className={cn("pointer-events-none absolute rounded-lg border-4 bg-black/50 px-3 py-1 font-heading text-3xl font-semibold tracking-widest", className)}
     >
       {label}
     </motion.span>

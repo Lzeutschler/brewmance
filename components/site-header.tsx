@@ -15,7 +15,7 @@ export function SiteHeader() {
         <Link
           href="/"
           aria-label={SITE.name}
-          className="-ml-1 flex shrink-0 items-center gap-2 rounded-md px-1 py-1 font-heading text-lg leading-none font-extrabold whitespace-nowrap sm:text-xl"
+          className="-ml-1 flex shrink-0 items-center gap-2 rounded-md px-1 py-1 font-heading text-lg leading-none font-semibold whitespace-nowrap sm:text-xl"
         >
           <BrandMark className="size-7" />
           {/* Phones only have room for the logo next to the five nav links. */}

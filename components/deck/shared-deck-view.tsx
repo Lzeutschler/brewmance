@@ -71,7 +71,7 @@ export function SharedDeckView({ shared }: { shared: ResolvedSharedDeck }) {
         <div className="flex flex-1 flex-col gap-4">
           <div className="space-y-1">
             <p className="ui-label text-muted-foreground">Shared deck</p>
-            <h1 className="font-heading text-3xl leading-tight font-extrabold md:text-4xl">{deck.name}</h1>
+            <h1 className="font-heading text-3xl leading-tight font-medium md:text-4xl">{deck.name}</h1>
           </div>
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
             <ColorIdentity colors={deckIdentity(deck)} />
@@ -151,7 +151,7 @@ export function SharedDeckView({ shared }: { shared: ResolvedSharedDeck }) {
 
           <section className="panel flex flex-col items-start gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h2 className="font-heading text-xl font-bold">Brew your own</h2>
+              <h2 className="font-heading text-xl font-medium">Brew your own</h2>
               <p className="text-sm text-muted-foreground">
                 Swipe through cards for any commander. The deck stays balanced and within its bracket.
               </p>

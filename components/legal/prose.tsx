@@ -6,7 +6,7 @@ export function Prose({ className, ...props }: React.ComponentProps<"section">) 
     <section
       className={cn(
         "panel space-y-4 p-5 text-[0.9375rem] leading-relaxed text-muted-foreground sm:p-8",
-        "[&_h2]:pt-4 [&_h2]:text-2xl [&_h2]:leading-tight [&_h2]:font-bold [&_h2]:text-foreground [&_h2:first-child]:pt-0",
+        "[&_h2]:pt-4 [&_h2]:text-2xl [&_h2]:leading-tight [&_h2]:font-medium [&_h2]:text-foreground [&_h2:first-child]:pt-0",
         "[&_h3]:ui-label [&_h3]:pt-2 [&_h3]:text-foreground",
         "[&_strong]:font-semibold [&_strong]:text-foreground",
         "[&_ul]:list-disc [&_ul]:space-y-1 [&_ul]:pl-5",
@@ -21,7 +21,7 @@ export function Prose({ className, ...props }: React.ComponentProps<"section">) 
 export function PageHeader({ title, lang, children }: { title: string; lang?: string; children?: React.ReactNode }) {
   return (
     <header className="space-y-2 border-b border-border pb-5">
-      <h1 lang={lang} className="text-4xl leading-none font-extrabold break-words hyphens-auto sm:text-5xl">
+      <h1 lang={lang} className="text-4xl leading-none font-medium break-words hyphens-auto sm:text-5xl">
         {title}
       </h1>
       {children && <div className="text-sm text-muted-foreground">{children}</div>}

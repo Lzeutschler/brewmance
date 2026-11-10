@@ -153,7 +153,7 @@ export function EmptyCauldron({
     <div className={cn("panel-inset flex flex-col items-center gap-4 border-dashed px-6 py-10 text-center", className)}>
       <Cauldron mood="empty" className="text-[4.5px]" />
       <div className="space-y-1.5">
-        <h3 className="text-2xl font-bold">{title}</h3>
+        <h3 className="text-2xl font-medium">{title}</h3>
         {description && <p className="max-w-md text-muted-foreground">{description}</p>}
       </div>
       {actions && <div className="flex flex-wrap justify-center gap-2">{actions}</div>}

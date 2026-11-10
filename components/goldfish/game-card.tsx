@@ -103,7 +103,7 @@ export function GameCardView({
       {(counters.length > 0 || card.isToken) && (
         <div className="pointer-events-none absolute inset-x-0 bottom-[12%] flex flex-wrap justify-center gap-1">
           {counters.map(([kind, amount]) => (
-            <span key={kind} className="rounded-sm bg-ink/90 px-1.5 py-0.5 text-xs font-bold text-brand tabular-nums shadow-xs ring-1 ring-brand/60">
+            <span key={kind} className="rounded-sm bg-ink/90 px-1.5 py-0.5 text-xs font-semibold text-brand tabular-nums shadow-xs ring-1 ring-brand/60">
               {kind === "+1/+1" ? `+${amount}/+${amount}` : `${amount} ${kind}`}
             </span>
           ))}
