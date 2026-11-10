@@ -21,6 +21,7 @@ export function DeckList({ limit }: { limit?: number }) {
   const hydrated = useDecksHydrated();
   const decks = useDeckStore((s) => s.decks);
   const sessions = useDeckStore((s) => s.sessions);
+  const upgrades = useDeckStore((s) => s.upgrades);
   const sorted = Object.values(decks).sort((a, b) => b.updatedAt - a.updatedAt).slice(0, limit);
 
   if (!hydrated) {
@@ -57,20 +58,20 @@ export function DeckList({ limit }: { limit?: number }) {
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {sorted.map((deck) => (
-        <DeckTile key={deck.id} deck={deck} inProgress={Boolean(sessions[deck.id])} />
+        <DeckTile key={deck.id} deck={deck} inProgress={Boolean(sessions[deck.id])} upgrading={Boolean(upgrades[deck.id])} />
       ))}
     </div>
   );
 }
 
 /** A deck as a framed art crop with a name plate below, like a card's title and type line. */
-function DeckTile({ deck, inProgress }: { deck: Deck; inProgress: boolean }) {
+function DeckTile({ deck, inProgress, upgrading }: { deck: Deck; inProgress: boolean; upgrading: boolean }) {
   const count = deckCount(deck.entries);
   const identity = deckIdentity(deck);
   const art = deck.commander.image ? cardImageUrl(deck.commander.image, "art_crop") : null;
   return (
     <Link
-      href={inProgress ? `/build/${deck.id}` : `/decks/${deck.id}`}
+      href={inProgress ? `/build/${deck.id}` : upgrading ? `/upgrade/${deck.id}` : `/decks/${deck.id}`}
       className="group panel flex flex-col overflow-hidden p-1.5 transition hover:-translate-y-1 hover:-rotate-[0.6deg] hover:border-brand/70"
     >
       <div className="relative h-32 overflow-hidden rounded-md bg-muted">
@@ -80,7 +81,7 @@ function DeckTile({ deck, inProgress }: { deck: Deck; inProgress: boolean }) {
             style={{ backgroundImage: `url(${art})` }}
           />
         )}
-        {inProgress && <Badge className="absolute top-2 left-2">Brewing</Badge>}
+        {(inProgress || upgrading) && <Badge className="absolute top-2 left-2">{inProgress ? "Brewing" : "Upgrading"}</Badge>}
       </div>
       {/* The commanders' colors as a thin band, like the frame color of a card. */}
       <div className="mt-1.5 flex h-1.5 gap-px overflow-hidden rounded-xs" aria-hidden="true">

@@ -99,6 +99,9 @@ export default function AboutPage() {
             {SITE.name} is not affiliated with EDHREC or Scryfall.
           </li>
           <li>
+            Precon deck lists from <ExternalLink href="https://mtgjson.com">MTGJSON</ExternalLink> (MIT license).
+          </li>
+          <li>
             Tap and card type symbols from the <ExternalLink href="https://mana.andrewgioia.com">Mana</ExternalLink> font
             by Andrew Gioia; Alegreya and Archivo typefaces and{" "}
             <ExternalLink href="https://phosphoricons.com">Phosphor</ExternalLink> icons. All under the SIL Open Font

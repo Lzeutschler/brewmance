@@ -235,3 +235,39 @@ test.describe("on a phone", () => {
     await expect(page.locator("[data-zone=battlefield] [data-card-name]")).toHaveCount(1);
   });
 });
+
+// Upgrade swipe: open a precon, swap, pass and keep, then finish in the editor with 99 cards.
+test("upgrade a precon by swiping", async ({ page }) => {
+  await page.goto("/upgrade");
+  await page.getByRole("textbox", { name: "Search precons" }).fill("virtue and valor");
+  await page.getByRole("button", { name: /Virtue and Valor/ }).click();
+
+  await expect(page.getByRole("heading", { name: "Upgrade Virtue and Valor" })).toBeVisible({ timeout: 30_000 });
+  const budget = page.getByRole("group", { name: "Budget for the new cards" });
+  await expect(budget.getByRole("button", { name: "$25", exact: true })).toHaveAttribute("aria-pressed", "true");
+  await page.getByRole("button", { name: "Find swaps" }).click();
+
+  const swapCount = page.getByTestId("swap-count");
+  const cut = page.getByTestId("cut-name");
+  await expect(swapCount).toHaveText("0", { timeout: 30_000 });
+  await page.keyboard.press("ArrowRight");
+  await expect(swapCount).toHaveText("1");
+
+  // Keeping the card to cut offers another cut; passing leaves the deck alone.
+  const firstCut = await cut.textContent();
+  await page.keyboard.press("k");
+  await expect(cut).not.toHaveText(firstCut!);
+  await page.keyboard.press("ArrowLeft");
+  await expect(swapCount).toHaveText("1");
+
+  await page.keyboard.press("ArrowRight");
+  await expect(swapCount).toHaveText("2");
+  await page.keyboard.press("z");
+  await expect(swapCount).toHaveText("1");
+
+  await page.getByRole("button", { name: "Finish upgrade" }).click();
+  await expect(page.getByTestId("upgrade-summary")).toContainText("1 swap,");
+  await page.getByRole("button", { name: "Finish & open deck" }).click();
+  await expect(page.getByText("Deck size is legal")).toBeVisible();
+  await expect(page.getByRole("link", { name: "Upgrade", exact: true }).last()).toBeVisible();
+});

@@ -1,6 +1,7 @@
 import type { Icon, IconProps } from "@phosphor-icons/react";
 import {
   ArrowCounterClockwiseIcon as ArrowCounterClockwiseBase,
+  ArrowDownIcon as ArrowDownBase,
   ArrowLeftIcon as ArrowLeftBase,
   ArrowRightIcon as ArrowRightBase,
   ArrowUpIcon as ArrowUpBase,
@@ -30,16 +31,20 @@ import {
   MagnifyingGlassIcon as MagnifyingGlassBase,
   MinusIcon as MinusBase,
   NotePencilIcon as NotePencilBase,
+  PackageIcon as PackageBase,
   PlayIcon as PlayBase,
   PlusIcon as PlusBase,
   RedditLogoIcon as RedditLogoBase,
   ShareNetworkIcon as ShareNetworkBase,
+  ShieldCheckIcon as ShieldCheckBase,
+  ShoppingCartSimpleIcon as ShoppingCartSimpleBase,
   ShuffleIcon as ShuffleBase,
   SidebarSimpleIcon as SidebarSimpleBase,
   SkipForwardIcon as SkipForwardBase,
   SlidersHorizontalIcon as SlidersHorizontalBase,
   StackIcon as StackBase,
   StarIcon as StarBase,
+  SwapIcon as SwapBase,
   SwordIcon as SwordBase,
   TrashIcon as TrashBase,
   UploadSimpleIcon as UploadSimpleBase,
@@ -61,6 +66,7 @@ function bold(Base: Icon, name: string) {
 }
 
 export const ArrowCounterClockwiseIcon = bold(ArrowCounterClockwiseBase, "ArrowCounterClockwiseIcon");
+export const ArrowDownIcon = bold(ArrowDownBase, "ArrowDownIcon");
 export const ArrowLeftIcon = bold(ArrowLeftBase, "ArrowLeftIcon");
 export const ArrowRightIcon = bold(ArrowRightBase, "ArrowRightIcon");
 export const ArrowUpIcon = bold(ArrowUpBase, "ArrowUpIcon");
@@ -90,16 +96,20 @@ export const ListIcon = bold(ListBase, "ListIcon");
 export const MagnifyingGlassIcon = bold(MagnifyingGlassBase, "MagnifyingGlassIcon");
 export const MinusIcon = bold(MinusBase, "MinusIcon");
 export const NotePencilIcon = bold(NotePencilBase, "NotePencilIcon");
+export const PackageIcon = bold(PackageBase, "PackageIcon");
 export const PlayIcon = bold(PlayBase, "PlayIcon");
 export const PlusIcon = bold(PlusBase, "PlusIcon");
 export const RedditLogoIcon = bold(RedditLogoBase, "RedditLogoIcon");
 export const ShareNetworkIcon = bold(ShareNetworkBase, "ShareNetworkIcon");
+export const ShieldCheckIcon = bold(ShieldCheckBase, "ShieldCheckIcon");
+export const ShoppingCartSimpleIcon = bold(ShoppingCartSimpleBase, "ShoppingCartSimpleIcon");
 export const ShuffleIcon = bold(ShuffleBase, "ShuffleIcon");
 export const SidebarSimpleIcon = bold(SidebarSimpleBase, "SidebarSimpleIcon");
 export const SkipForwardIcon = bold(SkipForwardBase, "SkipForwardIcon");
 export const SlidersHorizontalIcon = bold(SlidersHorizontalBase, "SlidersHorizontalIcon");
 export const StackIcon = bold(StackBase, "StackIcon");
 export const StarIcon = bold(StarBase, "StarIcon");
+export const SwapIcon = bold(SwapBase, "SwapIcon");
 export const SwordIcon = bold(SwordBase, "SwordIcon");
 export const TrashIcon = bold(TrashBase, "TrashIcon");
 export const UploadSimpleIcon = bold(UploadSimpleBase, "UploadSimpleIcon");

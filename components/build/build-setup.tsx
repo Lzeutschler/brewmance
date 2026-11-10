@@ -1,8 +1,11 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 
+import { SwapIcon } from "@/components/icons";
 import { PageHeader } from "@/components/page-header";
+import { Button } from "@/components/ui/button";
 import { isBackground } from "@/lib/cards/pairing";
 import type { CommanderSummary } from "@/lib/cards/types";
 import { useCommanders } from "@/lib/data/client";
@@ -31,6 +34,11 @@ export function BuildSetup() {
       <PageHeader
         title="Build a deck"
         description="Pick a commander and a power level. Then swipe through cards that fit — the deck keeps its mana curve and staples in balance while you choose."
+        actions={
+          <Button variant="outline" nativeButton={false} render={<Link href="/upgrade" />}>
+            <SwapIcon /> Upgrade a precon instead
+          </Button>
+        }
       />
 
       {commander && <CommanderSetup commander={commander} onClose={() => setChosen(null)} />}

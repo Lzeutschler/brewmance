@@ -18,6 +18,15 @@ import {
 import { DEFAULT_PREFERENCES, type DeckSettings, type SwipePreferences } from "@/lib/deckbuilder/settings";
 import type { DeckTemplate } from "@/lib/deckbuilder/template";
 import type { CandidatePool } from "@/lib/deckbuilder/types";
+import {
+  decideSwap,
+  startUpgrade,
+  undoSwap,
+  type Swap,
+  type UpgradeDecision,
+  type UpgradePool,
+  type UpgradeSession,
+} from "@/lib/deckbuilder/upgrade";
 import { DECK_STORE_VERSION, migrateDeckStore } from "@/lib/decks/migrate";
 import type { Bracket } from "@/lib/edhrec/types";
 import { commanderTitle } from "@/lib/decks/command-zone";
@@ -27,6 +36,8 @@ interface DeckStore {
   decks: Record<string, Deck>;
   /** In-progress swipe sessions, keyed by deck id. */
   sessions: Record<string, SwipeSession>;
+  /** Upgrades in progress, keyed by deck id. */
+  upgrades: Record<string, UpgradeSession>;
   /** Oracle ids of cards swiped left, per commander oracle id, for "hide cards I passed before". */
   passedByCommander: Record<string, string[]>;
   /** Preferences of the deck changed last; new decks start with them. */
@@ -42,6 +53,7 @@ interface DeckStore {
     maybe?: Card[];
     settings?: DeckSettings;
     recommendation?: DeckTemplate;
+    precon?: Deck["precon"];
   }): string;
   updateDeck(id: string, update: (deck: Deck) => Deck): void;
   deleteDeck(id: string): void;
@@ -54,6 +66,14 @@ interface DeckStore {
   skipToLands(deckId: string): void;
   /** Fills the deck with basics and ends its swipe session. */
   finishSwipe(deckId: string): void;
+  /** Starts trading the deck's weakest cards, at most `budgetUsd` for the new ones together. */
+  startUpgrade(deckId: string, pool: UpgradePool, budgetUsd: number | null): void;
+  decideUpgrade(deckId: string, swap: Pick<Swap, "out" | "in">, decision: UpgradeDecision): void;
+  undoUpgrade(deckId: string): void;
+  /** Changes what the new cards of a running upgrade may cost together; null lifts the limit. */
+  setUpgradeBudget(deckId: string, budgetUsd: number | null): void;
+  /** Ends the upgrade; the swaps made stay in the deck. */
+  finishUpgrade(deckId: string): void;
 }
 
 export const useDeckStore = create<DeckStore>()(
@@ -61,10 +81,11 @@ export const useDeckStore = create<DeckStore>()(
     (set, get) => ({
       decks: {},
       sessions: {},
+      upgrades: {},
       passedByCommander: {},
       lastPreferences: DEFAULT_PREFERENCES,
 
-      createDeck({ commander, partner, bracket, theme, name, entries = [], maybe = [], settings, recommendation }) {
+      createDeck({ commander, partner, bracket, theme, name, entries = [], maybe = [], settings, recommendation, precon }) {
         const id = crypto.randomUUID();
         const now = Date.now();
         const deck: Deck = {
@@ -78,6 +99,7 @@ export const useDeckStore = create<DeckStore>()(
           maybe,
           settings: settings ?? { overrides: {}, preferences: get().lastPreferences },
           recommendation,
+          ...(precon && { precon }),
           createdAt: now,
           updatedAt: now,
         };
@@ -98,7 +120,8 @@ export const useDeckStore = create<DeckStore>()(
         set((s) => {
           const { [id]: _deck, ...decks } = s.decks;
           const { [id]: _session, ...sessions } = s.sessions;
-          return { decks, sessions };
+          const { [id]: _upgrade, ...upgrades } = s.upgrades;
+          return { decks, sessions, upgrades };
         });
       },
 
@@ -171,6 +194,39 @@ export const useDeckStore = create<DeckStore>()(
         set((s) => {
           const { [deckId]: _session, ...rest } = s.sessions;
           return { decks: { ...s.decks, [deckId]: deck }, sessions: rest };
+        });
+      },
+
+      startUpgrade(deckId, pool, budgetUsd) {
+        const deck = get().decks[deckId];
+        if (!deck) return;
+        const next = startUpgrade(deck, pool, budgetUsd);
+        set((s) => ({ decks: { ...s.decks, [deckId]: next.deck }, upgrades: { ...s.upgrades, [deckId]: next.session } }));
+      },
+
+      decideUpgrade(deckId, swap, decision) {
+        const { decks, upgrades } = get();
+        if (!decks[deckId] || !upgrades[deckId]) return;
+        const next = decideSwap(upgrades[deckId], decks[deckId], swap, decision);
+        set((s) => ({ decks: { ...s.decks, [deckId]: next.deck }, upgrades: { ...s.upgrades, [deckId]: next.session } }));
+      },
+
+      undoUpgrade(deckId) {
+        const { decks, upgrades } = get();
+        if (!decks[deckId] || !upgrades[deckId]) return;
+        const next = undoSwap(upgrades[deckId], decks[deckId]);
+        set((s) => ({ decks: { ...s.decks, [deckId]: next.deck }, upgrades: { ...s.upgrades, [deckId]: next.session } }));
+      },
+
+      setUpgradeBudget(deckId, budgetUsd) {
+        const session = get().upgrades[deckId];
+        if (session) set((s) => ({ upgrades: { ...s.upgrades, [deckId]: { ...session, budgetUsd } } }));
+      },
+
+      finishUpgrade(deckId) {
+        set((s) => {
+          const { [deckId]: _upgrade, ...upgrades } = s.upgrades;
+          return { upgrades };
         });
       },
     }),

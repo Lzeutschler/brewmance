@@ -21,6 +21,7 @@ import {
   PlayIcon,
   PlusIcon,
   StarIcon,
+  SwapIcon,
   TrashIcon,
 } from "@/components/icons";
 import { ShareButton } from "@/components/share-button";
@@ -29,8 +30,9 @@ import { Input } from "@/components/ui/input";
 import { allowsMultipleCopies } from "@/lib/cards/names";
 import type { Card } from "@/lib/cards/types";
 import { BRACKET_INFO, bracketViolation } from "@/lib/deckbuilder/brackets";
-import { CARD_TYPES, expandEntries, primaryType, type CardType } from "@/lib/decks/stats";
-import { commandZone, deckIdentity } from "@/lib/decks/command-zone";
+import { canUpgrade } from "@/lib/deckbuilder/upgrade";
+import { CARD_TYPES, deckCount, expandEntries, primaryType, type CardType } from "@/lib/decks/stats";
+import { commandZone, deckIdentity, mainDeckSize } from "@/lib/decks/command-zone";
 import type { Deck, DeckEntry } from "@/lib/decks/types";
 import { edhrecCommanderUrl } from "@/lib/edhrec/links";
 import { BRACKETS, type Bracket } from "@/lib/edhrec/types";
@@ -49,6 +51,7 @@ export function DeckEditor({ deckId }: { deckId: string }) {
   const hydrated = useDecksHydrated();
   const deck = useDeckStore((s) => s.decks[deckId]);
   const hasSession = useDeckStore((s) => Boolean(s.sessions[deckId]));
+  const upgrading = useDeckStore((s) => Boolean(s.upgrades[deckId]));
 
   if (!hydrated) return null;
   if (!deck) {
@@ -61,10 +64,10 @@ export function DeckEditor({ deckId }: { deckId: string }) {
       </div>
     );
   }
-  return <Editor deck={deck} hasSession={hasSession} />;
+  return <Editor deck={deck} hasSession={hasSession} upgrading={upgrading} />;
 }
 
-function Editor({ deck, hasSession }: { deck: Deck; hasSession: boolean }) {
+function Editor({ deck, hasSession, upgrading }: { deck: Deck; hasSession: boolean; upgrading: boolean }) {
   const router = useRouter();
   const updateDeck = useDeckStore((s) => s.updateDeck);
   const deleteDeck = useDeckStore((s) => s.deleteDeck);
@@ -73,6 +76,9 @@ function Editor({ deck, hasSession }: { deck: Deck; hasSession: boolean }) {
   const [inspected, setInspected] = useState<Card | null>(null);
   const inspectedEntry = inspected ? deck.entries.find((e) => e.card.id === inspected.id) : undefined;
   const inspectedMaybe = inspected !== null && deck.maybe.some((c) => c.id === inspected.id);
+
+  // A full deck has nothing left to swipe in, so the upgrade becomes the main action.
+  const complete = !hasSession && deckCount(deck.entries) >= mainDeckSize(deck);
 
   const update = (fn: (deck: Deck) => Deck) => updateDeck(deck.id, fn);
 
@@ -161,9 +167,14 @@ function Editor({ deck, hasSession }: { deck: Deck; hasSession: boolean }) {
             <EdhrecLink href={edhrecCommanderUrl(commandZone(deck), deck.bracket, deck.theme)}>Compare on EDHREC</EdhrecLink>
           </div>
           <div className="mt-auto flex flex-wrap gap-2">
-            <Button nativeButton={false} render={<Link href={`/build/${deck.id}`} />}>
+            <Button variant={complete ? "outline" : "default"} nativeButton={false} render={<Link href={`/build/${deck.id}`} />}>
               <HeartIcon /> {hasSession ? "Continue swiping" : "Swipe more cards"}
             </Button>
+            {(upgrading || canUpgrade(deck)) && (
+              <Button variant={complete ? "default" : "outline"} nativeButton={false} render={<Link href={`/upgrade/${deck.id}`} />}>
+                <SwapIcon /> {upgrading ? "Continue upgrade" : "Upgrade"}
+              </Button>
+            )}
             <ExportDialog deck={deck}>
               <Button variant="outline">
                 <DownloadSimpleIcon /> Export

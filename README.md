@@ -14,7 +14,14 @@ A web app for Magic: The Gathering Commander players:
    play or tap, right-click for counters, tokens, flip and zone moves. London mulligan (first one free),
    scry/surveil/mill/search, commander tax, undo, keyboard shortcuts (D, U, N, S, M, ⌘Z) and an
    opening-hand simulator.
-3. **Commander quiz** (live, `/quiz`): newcomers answer seven vibe questions (hero or villain, favorite
+3. **Upgrade swipe** (live, `/upgrade`): start from one of about 180 precons, a deck built here or an
+   imported list. Each card is a swap: the card that does the least for the deck (rarely played with this
+   commander, a crowded role or curve slot) goes, the best-scoring replacement comes in. Swipe right to swap,
+   left to pass, up for maybe, or keep the card to cut and get another cut. Spells trade for spells and
+   lands for lands, so the deck keeps its size and land count; the bracket rules, an optional total budget
+   (no single card over 40% of it) and the deck settings apply. The summary lists the swaps and copies a
+   shopping list.
+4. **Commander quiz** (live, `/quiz`): newcomers answer seven vibe questions (hero or villain, favorite
    universe such as Lord of the Rings or Marvel, creatures, art mood); experienced players answer seven
    questions about win condition, engine, table politics, tempo, complexity, colors and creature types.
    Then they swipe through the best-matching commanders with a "why this fits" for each, toggle popular
@@ -49,6 +56,12 @@ Then `scripts/build-recs-snapshot.ts` downloads EDHREC's bulk data (`edhrec.com/
 (about 3,300 files, 26 MB): each commander's deck count, its 200 most played cards and up to 60 more with
 high synergy. API routes read these when EDHREC's pages cannot be asked. The step takes about 20 seconds;
 if it fails, the build goes on without the snapshot.
+
+Last, `scripts/build-precons.ts` writes the precons for the upgrade swipe: `public/data/precons.json` (name,
+commanders, colors and image of each) and `public/data/precons/{id}.json` (one card list each). Precon lists
+never change, so they live in the repository (`scripts/precons-baseline.json`, from MTGJSON) and a build
+only asks MTGJSON for its deck index and for decks released since. `pnpm precons` saves those new decks
+into the baseline, worth committing now and then; without it they are fetched again on every fresh build.
 
 The data is rebuilt when it is older than a week; `pnpm data` rebuilds it now.
 
@@ -91,6 +104,9 @@ pile). Text and accents meet WCAG AA (text 15.6:1, brand 7.7:1 on the background
   EDHREC allows this under its data policy (at most one request per second, a User-Agent with a contact
   email; see `docs/edhrec-data-policy.md`). Requests to EDHREC are spaced one second apart per server
   instance and during the card database build.
+- **[MTGJSON](https://mtgjson.com)** (MIT): the card lists of the preconstructed Commander decks, read at
+  build time only (`DeckList.json` and `decks/{fileName}.json`). Collector's Editions and reprints of a
+  deck are folded into one entry.
 - **Commander archetypes** for the quiz (`lib/tagging/archetypes.ts`) combine Scryfall Tagger tags on
   each commander with EDHREC theme pages (`pages/tags/{theme}.json`, top commanders per theme) and color
   pages (`pages/commanders/{colors}.json`, deck totals). The card database build fetches these ~85
@@ -100,19 +116,20 @@ pile). Text and accents meet WCAG AA (text 15.6:1, brand 7.7:1 on the background
 
 ```
 app/                 pages and API routes (api/candidates, api/commander-insights, api/cards/*), legal pages, metadata routes
-components/          UI: build/ (commander + bracket picker), swipe/, quiz/, deck/ (editor), goldfish/, card/, ui/ (shadcn),
+components/          UI: build/ (commander + bracket picker), swipe/, upgrade/, quiz/, deck/ (editor), goldfish/, card/, ui/ (shadcn),
                      legal/ (prose), icons.tsx (Phosphor + Mana font)
 lib/cards/           card types, names/slugs, mana helpers, image URLs
 lib/tagging/         roles (Tagger tags), commander themes, tribes and archetypes
 lib/quiz/            quiz questions, franchises and the commander scoring
-lib/deckbuilder/     deck template, bracket rules, scoring, swipe session, basic land fill
+lib/deckbuilder/     deck template, bracket rules, scoring, swipe session, upgrade swaps, basic land fill
+lib/precons/         precon lists: MTGJSON condensing and turning a list into a deck
 lib/deck-io/         deck list import/export
 lib/goldfish/        pure game actions (zones, mulligan, tokens, …) and the opening-hand simulator
 lib/server/          server-only card database and candidate pool
 lib/site.ts          site URL, description and the provider details for Impressum and privacy policy
-stores/              decks.ts (persisted decks and swipe sessions), game.ts (goldfish game with undo),
+stores/              decks.ts (persisted decks, swipe sessions and upgrades), game.ts (goldfish game with undo),
                      quiz.ts (persisted quiz answers and commander shortlist)
-scripts/             card database build
+scripts/             card database, recommendation snapshot and precon builds
 ```
 
 ## Deployment

@@ -27,6 +27,8 @@ export interface Deck {
    * Missing for imported decks, which fall back to the bracket defaults.
    */
   recommendation?: DeckTemplate;
+  /** The preconstructed deck this one started as. */
+  precon?: { id: string; name: string };
   createdAt: number;
   updatedAt: number;
 }
