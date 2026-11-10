@@ -91,8 +91,8 @@ function CardAction({ children, className }: { children: React.ReactNode; classN
 export default function HomePage() {
   return (
     <div className="mx-auto w-full max-w-6xl space-y-16 px-4 pt-8 pb-12 sm:py-16">
-      {/* Clipped sideways: the swiped cards fly out of the scene. */}
-      <section className="grid items-center gap-10 overflow-x-clip md:grid-cols-[1.2fr_1fr]">
+      {/* Clipped sideways: the swiped cards fly out of the scene. The brew bubbles faster while the main button is hovered. */}
+      <section className="grid items-center gap-10 overflow-x-clip has-[[data-cta]:focus-visible]:[--brew-bubble:0.9s] has-[[data-cta]:hover]:[--brew-bubble:0.9s] md:grid-cols-[1.2fr_1fr]">
         {/* On a phone the swipe stack comes right under the headline, then the buttons, then the pitch. */}
         <div className="flex flex-col gap-5 sm:gap-6">
           <h1 className="text-[2.6rem] leading-[1.06] font-medium min-[400px]:text-5xl sm:text-6xl md:text-5xl lg:text-6xl">
@@ -114,7 +114,7 @@ export default function HomePage() {
             deck right here: free, no account.
           </p>
           <div className="flex flex-wrap gap-3">
-            <Button size="lg" nativeButton={false} render={<Link href="/build" />}>
+            <Button size="lg" nativeButton={false} render={<Link href="/build" />} data-cta>
               Start building <ArrowRightIcon />
             </Button>
             <Button size="lg" variant="outline" nativeButton={false} render={<Link href="/decks" />}>

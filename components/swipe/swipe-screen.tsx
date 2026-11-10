@@ -12,6 +12,7 @@ import { CardSheet } from "@/components/card/card-sheet";
 import { ManaCost } from "@/components/card/mana";
 import { BrewLoader, CelebrationCauldron } from "@/components/cauldron";
 import { EdhrecLink } from "@/components/edhrec-link";
+import { FlavorText } from "@/components/flavor-text";
 import {
   ArrowLeftIcon,
   ArrowUUpLeftIcon,
@@ -38,9 +39,10 @@ import type { DeckTemplate } from "@/lib/deckbuilder/template";
 import type { Candidate } from "@/lib/deckbuilder/types";
 import { deckStats, type DeckStats } from "@/lib/decks/stats";
 import { edhrecCardUrl, edhrecCommanderUrl } from "@/lib/edhrec/links";
-import { commandZone, commanderTitle } from "@/lib/decks/command-zone";
+import { commandZone, commanderTitle, deckIdentity } from "@/lib/decks/command-zone";
 import type { Deck } from "@/lib/decks/types";
 import { randomSeed } from "@/lib/random";
+import { FLAVOR } from "@/lib/flavor";
 import { ROLE_LABELS } from "@/lib/tagging/roles";
 import { cn } from "@/lib/utils";
 import { useDeckStore, useDecksHydrated } from "@/stores/decks";
@@ -235,7 +237,7 @@ function SwipeBoard({ deck, session }: { deck: Deck; session: SwipeSession }) {
         </div>
 
         {session.phase === "done" || !current ? (
-          <DonePanel stats={stats} template={template} onFinish={finish} onUndo={undo} canUndo={session.history.length > 0} />
+          <DonePanel deck={deck} stats={stats} template={template} onFinish={finish} onUndo={undo} canUndo={session.history.length > 0} />
         ) : (
           <>
             <div className="w-full max-w-md lg:hidden">
@@ -404,12 +406,14 @@ function FitMeters({ candidate, deckCount }: { candidate: Candidate; deckCount: 
 }
 
 function DonePanel({
+  deck,
   stats,
   template,
   onFinish,
   onUndo,
   canUndo,
 }: {
+  deck: Deck;
   stats: DeckStats;
   template: DeckTemplate;
   onFinish: () => void;
@@ -420,7 +424,7 @@ function DonePanel({
   const basics = Math.max(0, template.lands - stats.lands);
   return (
     <div className="panel flex w-full max-w-md flex-col items-center gap-4 p-8 text-center">
-      <CelebrationCauldron className="-mt-2 text-[4.5px]" />
+      <CelebrationCauldron className="-mt-2 text-[4.5px]" colors={deckIdentity(deck)} />
       <h2 className="text-2xl font-medium">Your brew is ready</h2>
       <p className="text-muted-foreground">
         {stats.nonlands} spells and {stats.lands} lands picked.{" "}
@@ -433,6 +437,7 @@ function DonePanel({
         </Button>
         <Button onClick={onFinish}>Finish &amp; open editor</Button>
       </div>
+      <FlavorText lines={FLAVOR.brewed} seed={deck.id} />
     </div>
   );
 }

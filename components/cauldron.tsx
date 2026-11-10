@@ -58,7 +58,8 @@ export function Cauldron({
 }) {
   const bob = still ? undefined : "animate-[brew-bob_4s_ease-in-out_infinite]";
   const liquid = mood !== "empty";
-  const bubbleSpeed = mood === "boiling" ? "1.3s" : "2.6s";
+  // A page can speed the bubbles up through --brew-bubble, e.g. while its main button is hovered.
+  const bubbleSpeed = mood === "boiling" ? "1.3s" : "var(--brew-bubble, 2.6s)";
   return (
     <div className={cn("brew-scene relative h-[18em] w-[26em] select-none", className)} aria-hidden="true">
       {liquid && (
@@ -142,11 +143,14 @@ export function EmptyCauldron({
   title,
   description,
   actions,
+  flavor,
   className,
 }: {
   title: string;
   description?: React.ReactNode;
   actions?: React.ReactNode;
+  /** A line of flavor text below everything else. */
+  flavor?: React.ReactNode;
   className?: string;
 }) {
   return (
@@ -157,6 +161,7 @@ export function EmptyCauldron({
         {description && <p className="max-w-md text-muted-foreground">{description}</p>}
       </div>
       {actions && <div className="flex flex-wrap justify-center gap-2">{actions}</div>}
+      {flavor && <div className="w-full max-w-md">{flavor}</div>}
     </div>
   );
 }
@@ -169,18 +174,23 @@ const CELEBRATION_PIPS = [
   { symbol: "G", x: "-0.5em", drift: "-3em", delay: "2s" },
 ];
 
-/** A bubbling cauldron with the five colors and hearts rising from it, for "your deck is ready". */
-export function CelebrationCauldron({ className }: { className?: string }) {
+/**
+ * A bubbling cauldron with mana symbols and hearts rising from it, for "your deck is ready". With
+ * `colors` the steam is the deck's own color identity (the colorless symbol when it has none),
+ * otherwise all five colors.
+ */
+export function CelebrationCauldron({ className, colors }: { className?: string; colors?: readonly string[] }) {
+  const symbols = colors === undefined ? null : colors.length ? colors : ["C"];
   return (
     <div className={cn("brew-scene relative h-[28em] w-[30em]", className)} aria-hidden="true">
       <Cauldron className="absolute bottom-0 left-1/2 -translate-x-1/2" />
-      {CELEBRATION_PIPS.map((pip) => (
+      {CELEBRATION_PIPS.map((pip, i) => (
         <span
-          key={pip.symbol}
+          key={pip.x}
           className="absolute bottom-[13em] z-20 size-[3em] animate-[brew-float-sm_3.5s_ease-in-out_infinite_both] motion-reduce:hidden"
           style={{ left: `calc(50% - 1.5em + ${pip.x})`, animationDelay: pip.delay, "--drift": pip.drift } as React.CSSProperties}
         >
-          <ManaSymbol symbol={pip.symbol} className="size-full drop-shadow-[0_0.3em_0.4em_rgb(0_0_0/45%)]" />
+          <ManaSymbol symbol={symbols ? symbols[i % symbols.length] : pip.symbol} className="size-full drop-shadow-[0_0.3em_0.4em_rgb(0_0_0/45%)]" />
         </span>
       ))}
       {["-4em", "3em"].map((x, i) => (
