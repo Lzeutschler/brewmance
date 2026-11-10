@@ -23,7 +23,14 @@ Deck
 1 Goblin Warchief
 30 Mountain`;
 
-export function ImportDialog({ children }: { children: React.ReactElement }) {
+export function ImportDialog({
+  children,
+  destination = (id) => `/decks/${id}`,
+}: {
+  children: React.ReactElement;
+  /** Where the imported deck opens; the editor unless the import started somewhere else. */
+  destination?: (deckId: string) => string;
+}) {
   const router = useRouter();
   const createDeck = useDeckStore((s) => s.createDeck);
   const [open, setOpen] = useState(false);
@@ -75,7 +82,7 @@ export function ImportDialog({ children }: { children: React.ReactElement }) {
       if (missing.length) toast.warning(`Skipped ${missing.length} unknown card(s): ${missing.slice(0, 5).join(", ")}`);
       else toast.success("Deck imported");
       setOpen(false);
-      router.push(`/decks/${id}`);
+      router.push(destination(id));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Import failed");
     } finally {

@@ -242,7 +242,8 @@ export function CommanderSetup({
   );
 }
 
-function ThemeChip({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
+/** A toggle chip for one choice out of a few: a theme, a budget step. */
+export function ThemeChip({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
   return (
     <button
       type="button"

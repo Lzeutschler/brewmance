@@ -96,8 +96,13 @@ function openCandidates(session: SwipeSession, deck: Deck, lands: boolean): Cand
 
 /** Everything the scorer needs to know about the deck right now. */
 export function scoreContext(session: SwipeSession, deck: Deck): ScoreContext {
+  return deckScoreContext(deck, session.combos);
+}
+
+/** The scorer's view of `deck`, with the Commander Spellbook combos known for its card pool. */
+export function deckScoreContext(deck: Deck, knownCombos: readonly Combo[] | null): ScoreContext {
   const have = new Set([...commandZone(deck).map((c) => c.name), ...deck.entries.map((e) => e.card.name)]);
-  const combos = deck.bracket >= 4 ? (session.combos ?? []) : [];
+  const combos = deck.bracket >= 4 ? (knownCombos ?? []) : [];
   return {
     stats: deckStats(deck),
     template: deckTemplate(deck),
@@ -215,7 +220,7 @@ export function finish(session: SwipeSession, deck: Deck): Deck {
 }
 
 /** Deck entries store plain cards, without the swipe scores. */
-function stripCandidate(candidate: Candidate): Card {
+export function stripCandidate(candidate: Candidate): Card {
   const { synergy: _synergy, inclusion: _inclusion, ...card } = candidate;
   return card;
 }

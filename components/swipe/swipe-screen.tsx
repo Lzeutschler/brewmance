@@ -258,42 +258,7 @@ function SwipeBoard({ deck, session }: { deck: Deck; session: SwipeSession }) {
 
       {/* Why this card */}
       <aside className="order-3 space-y-5">
-        {current && session.phase !== "done" && (
-          <div className="panel hidden space-y-4 p-5 lg:block">
-            <div>
-              <div className="flex items-start justify-between gap-2">
-                <h2 className="font-heading text-2xl leading-tight font-bold">{current.name}</h2>
-                <ManaCost cost={current.manaCost} className="pt-1" />
-              </div>
-              <p className="text-xs text-muted-foreground">{current.typeLine}</p>
-            </div>
-            <FitMeters candidate={current} deckCount={session.deckCount} />
-            {reasons.length > 0 && (
-              <ul className="space-y-1.5 text-sm">
-                {reasons.slice(0, 3).map(({ text }) => (
-                  <li key={text} className="flex gap-2">
-                    <CheckIcon className="mt-0.5 size-4 shrink-0 text-teal" aria-hidden />
-                    {text}
-                  </li>
-                ))}
-              </ul>
-            )}
-            <div className="flex flex-wrap gap-1.5">
-              {current.gameChanger && <Badge>Game Changer</Badge>}
-              {current.roles
-                .filter((r) => r !== "mld" && r !== "extraturn")
-                .map((role) => (
-                  <Badge key={role} variant="secondary">
-                    {ROLE_LABELS[role]}
-                  </Badge>
-                ))}
-              {current.priceUsd !== null && <Badge variant="outline">${current.priceUsd.toFixed(2)}</Badge>}
-            </div>
-            <EdhrecLink href={edhrecCardUrl(current.name)} className="text-xs text-muted-foreground">
-              {current.name} on EDHREC
-            </EdhrecLink>
-          </div>
-        )}
+        {current && session.phase !== "done" && <WhyPanel candidate={current} reasons={reasons} deckCount={session.deckCount} />}
 
         <div className="panel space-y-3 p-5">
           <div className="flex items-center justify-between text-sm">
@@ -335,8 +300,48 @@ const PHASE_LABELS: Record<SwipeSession["phase"], string> = {
   done: "Deck complete",
 };
 
+/** Why the deck wants this card: its EDHREC fit, what it fills in the deck, roles and price. Desktop only. */
+export function WhyPanel({ candidate, reasons, deckCount }: { candidate: Candidate; reasons: CandidateReason[]; deckCount: number }) {
+  return (
+    <div className="panel hidden space-y-4 p-5 lg:block">
+      <div>
+        <div className="flex items-start justify-between gap-2">
+          <h2 className="font-heading text-2xl leading-tight font-bold">{candidate.name}</h2>
+          <ManaCost cost={candidate.manaCost} className="pt-1" />
+        </div>
+        <p className="text-xs text-muted-foreground">{candidate.typeLine}</p>
+      </div>
+      <FitMeters candidate={candidate} deckCount={deckCount} />
+      {reasons.length > 0 && (
+        <ul className="space-y-1.5 text-sm">
+          {reasons.slice(0, 3).map(({ text }) => (
+            <li key={text} className="flex gap-2">
+              <CheckIcon className="mt-0.5 size-4 shrink-0 text-teal" aria-hidden />
+              {text}
+            </li>
+          ))}
+        </ul>
+      )}
+      <div className="flex flex-wrap gap-1.5">
+        {candidate.gameChanger && <Badge>Game Changer</Badge>}
+        {candidate.roles
+          .filter((r) => r !== "mld" && r !== "extraturn")
+          .map((role) => (
+            <Badge key={role} variant="secondary">
+              {ROLE_LABELS[role]}
+            </Badge>
+          ))}
+        {candidate.priceUsd !== null && <Badge variant="outline">${candidate.priceUsd.toFixed(2)}</Badge>}
+      </div>
+      <EdhrecLink href={edhrecCardUrl(candidate.name)} className="text-xs text-muted-foreground">
+        {candidate.name} on EDHREC
+      </EdhrecLink>
+    </div>
+  );
+}
+
 /** The "why this card" panel in brief, under the buttons where the panel itself sits far below the card. */
-function CompactWhy({ candidate, reasons }: { candidate: Candidate; reasons: CandidateReason[] }) {
+export function CompactWhy({ candidate, reasons }: { candidate: Candidate; reasons: CandidateReason[] }) {
   const synergy = Math.round(candidate.synergy * 100);
   // The badges already show synergy and popularity, so the lines say what the deck needs.
   const deckReasons = reasons.filter((r) => r.kind === "deck").slice(0, 2);
@@ -432,13 +437,22 @@ function DonePanel({
   );
 }
 
-function FullScreenMessage({ children, loading }: { children: React.ReactNode; loading?: boolean }) {
+/** A centered message or loader in place of a swipe board, with a way back. */
+export function FullScreenMessage({
+  children,
+  loading,
+  back = { href: "/build", label: "Back to build" },
+}: {
+  children: React.ReactNode;
+  loading?: boolean;
+  back?: { href: string; label: string };
+}) {
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-4 p-8 text-center text-muted-foreground">
       {loading ? <BrewLoader>{children}</BrewLoader> : <div className="flex flex-col items-center gap-3">{children}</div>}
       {!loading && (
-        <Link href="/build" className="inline-flex min-h-10 items-center gap-1.5 text-sm hover:text-foreground">
-          <ArrowLeftIcon className="size-4" /> Back to build
+        <Link href={back.href} className="inline-flex min-h-10 items-center gap-1.5 text-sm hover:text-foreground">
+          <ArrowLeftIcon className="size-4" /> {back.label}
         </Link>
       )}
     </div>

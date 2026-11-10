@@ -22,13 +22,18 @@ const exitVariants = {
   }),
 };
 
+/** What the stamps on a dragged card say; the upgrade swipe swaps instead of picking. */
+export type SwipeLabels = Partial<Record<SwipeDecision, string>>;
+
 /** A draggable card for any swipe stack: deck candidates as well as quiz commanders. */
 export function SwipeCard({
   card,
   onDecision,
+  labels,
 }: {
   card: CardDisplay;
   onDecision: (decision: SwipeDecision) => void;
+  labels?: SwipeLabels;
 }) {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -60,9 +65,9 @@ export function SwipeCard({
       whileDrag={{ scale: 1.03 }}
     >
       <CardImage card={card} size="large" eager flippable className="size-full shadow-2xl shadow-black/60" />
-      <Stamp label="PICK" className="top-8 left-6 -rotate-12 border-pick text-pick" opacity={pickOpacity} />
-      <Stamp label="PASS" className="top-8 right-6 rotate-12 border-pass text-pass" opacity={passOpacity} />
-      <Stamp label="MAYBE" className="bottom-16 left-1/2 -translate-x-1/2 border-maybe text-maybe" opacity={maybeOpacity} />
+      <Stamp label={labels?.pick ?? "PICK"} className="top-8 left-6 -rotate-12 border-pick text-pick" opacity={pickOpacity} />
+      <Stamp label={labels?.pass ?? "PASS"} className="top-8 right-6 rotate-12 border-pass text-pass" opacity={passOpacity} />
+      <Stamp label={labels?.maybe ?? "MAYBE"} className="bottom-16 left-1/2 -translate-x-1/2 border-maybe text-maybe" opacity={maybeOpacity} />
     </motion.div>
   );
 }

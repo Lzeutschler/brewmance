@@ -6,6 +6,7 @@ import type { Card, CommanderSummary } from "@/lib/cards/types";
 import type { Combo } from "@/lib/deckbuilder/combos";
 import type { CandidatePool, CommanderInsights } from "@/lib/deckbuilder/types";
 import type { Bracket } from "@/lib/edhrec/types";
+import type { PreconList, PreconSummary } from "@/lib/precons/types";
 
 async function getJson<T>(url: string, init?: RequestInit): Promise<T> {
   const res = await fetch(url, init);
@@ -56,6 +57,19 @@ export function useCardSearch(query: string, identity: string | null) {
     enabled: query.trim().length >= 2,
     placeholderData: (previous) => previous,
   });
+}
+
+export function usePrecons() {
+  return useQuery({
+    queryKey: ["precons"],
+    queryFn: () => getJson<PreconSummary[]>("/data/precons.json"),
+    staleTime: Infinity,
+  });
+}
+
+/** One precon's card list; `id` comes from the precon list, never from user input. */
+export function fetchPreconList(id: string) {
+  return getJson<PreconList>(`/data/precons/${encodeURIComponent(id)}.json`);
 }
 
 export function resolveCardNames(names: string[]) {

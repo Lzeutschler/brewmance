@@ -28,6 +28,13 @@ const FEATURES: { title: string; text: string; href: string; glyph: ManaGlyphNam
     action: "Start a deck",
   },
   {
+    title: "Upgrade a precon",
+    text: "Bring a precon or a deck you already play. Each swipe is a swap: the weakest card goes, a better match comes in, within your budget.",
+    href: "/upgrade",
+    glyph: "artifact",
+    action: "Upgrade a deck",
+  },
+  {
     title: "Goldfish",
     text: "Test your deck in an Arena-style sandbox: draw, play, tap and mulligan without the clunky UI.",
     href: "/goldfish",
@@ -75,7 +82,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="grid gap-4 md:grid-cols-3" aria-label="Features">
+      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4" aria-label="Features">
         {FEATURES.map(({ title, text, href, glyph, action }) => (
           <Link
             key={title}

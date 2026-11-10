@@ -18,14 +18,14 @@ export function SiteHeader() {
           className="-ml-1 flex shrink-0 items-center gap-2 rounded-md px-1 py-1 font-heading text-lg leading-none font-extrabold whitespace-nowrap sm:text-xl"
         >
           <BrandMark className="size-7" />
-          {/* Phones only have room for the logo next to the four nav links. */}
+          {/* Phones only have room for the logo next to the five nav links. */}
           <span className="max-sm:hidden">{SITE.name}</span>
         </Link>
         {/* The active link depends on the URL, which is only known at request time. */}
         <Suspense fallback={<Nav pathname={null} />}>
           <ActiveNav />
         </Suspense>
-        {/* Phones find it in the footer; the header has no room next to the four nav links. */}
+        {/* Phones find it in the footer; the header has no room next to the five nav links. */}
         <FeedbackDialog>
           <Button variant="ghost" size="sm" className="ml-auto text-muted-foreground max-sm:hidden">
             <ChatCircleTextIcon /> Feedback
