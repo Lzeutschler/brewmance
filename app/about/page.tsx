@@ -35,7 +35,7 @@ export default function AboutPage() {
           className="size-36 shrink-0 rotate-[-3deg] rounded-xl border-[5px] border-ink object-cover object-top shadow-xl ring-1 ring-border sm:size-40"
         />
         <div className="space-y-3">
-          <h1 className="text-4xl leading-none font-extrabold sm:text-5xl">Hi, I&apos;m Leonard</h1>
+          <h1 className="text-4xl leading-none font-medium sm:text-5xl">Hi, I&apos;m Leonard</h1>
           <p className="text-muted-foreground">
             Full-stack developer and AI engineer from the Ruhr area, Germany — and the person behind {SITE.name}.
           </p>

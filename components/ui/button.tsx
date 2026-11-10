@@ -4,12 +4,12 @@ import { cn } from "cn"
 
 // Every size keeps a hit area of at least 40px: the smaller ones extend it with an invisible ::after.
 const buttonVariants = cva(
-  "group/button relative inline-flex shrink-0 items-center justify-center rounded-md border border-transparent text-sm font-semibold whitespace-nowrap transition-[background-color,border-color,color,box-shadow,transform] duration-100 outline-none select-none [font-stretch:92%] after:absolute after:inset-x-0 after:-inset-y-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-45 aria-invalid:border-destructive [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "group/button relative inline-flex shrink-0 items-center justify-center rounded-md border border-transparent text-sm font-medium whitespace-nowrap transition-[background-color,border-color,color,box-shadow,transform] duration-100 outline-none select-none [font-stretch:92%] after:absolute after:inset-x-0 after:-inset-y-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-45 aria-invalid:border-destructive [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground shadow-[inset_0_1px_0_0_oklch(1_0_0/30%),0_2px_0_0_var(--brand-edge)] hover:bg-[var(--brand-hover)] active:shadow-[inset_0_1px_0_0_oklch(1_0_0/30%),0_1px_0_0_var(--brand-edge)]",
+          "bg-primary text-primary-foreground shadow-[inset_0_1px_0_0_oklch(1_0_0/30%),0_2px_0_0_var(--primary-edge)] hover:bg-[var(--primary-hover)] active:shadow-[inset_0_1px_0_0_oklch(1_0_0/30%),0_1px_0_0_var(--primary-edge)]",
         outline:
           "border-input bg-card text-foreground shadow-sm hover:border-[#4b5568] hover:bg-accent aria-expanded:bg-accent",
         secondary:

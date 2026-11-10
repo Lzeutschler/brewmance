@@ -120,7 +120,7 @@ export function CommanderSetup({
       <div className="min-w-0 space-y-6">
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-1">
-            <h2 className="text-3xl leading-tight font-bold">{commander.name}</h2>
+            <h2 className="text-3xl leading-tight font-medium">{commander.name}</h2>
             {partner && <p className="text-xl leading-tight font-semibold">& {partner.name}</p>}
             <p className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
               <ColorIdentity colors={identity} />

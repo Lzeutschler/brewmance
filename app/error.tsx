@@ -20,7 +20,7 @@ export default function ErrorPage({ error, retry }: { error: unknown; retry: () 
       className="mx-auto flex w-full max-w-xl flex-1 flex-col items-center justify-center gap-5 px-4 py-20 text-center"
     >
       <Cauldron mood="boiling" className="text-[5px]" />
-      <h1 className="text-4xl leading-tight font-extrabold">This brew fizzled</h1>
+      <h1 className="text-4xl leading-tight font-medium">This brew fizzled</h1>
       <p className="text-muted-foreground">
         Something boiled over and interrupted this page. Your decks are stored in your browser and are safe. Try again, or
         head back to the start.

@@ -167,7 +167,7 @@ function SwipeBoard({ deck, session }: { deck: Deck; session: SwipeSession }) {
             ))}
           </div>
           <div className="min-w-0">
-            <div className="truncate font-heading text-lg leading-tight font-bold">{deck.name}</div>
+            <div className="truncate font-heading text-lg leading-tight font-medium">{deck.name}</div>
             <div className="text-xs text-muted-foreground">
               Bracket {deck.bracket} · {BRACKET_INFO[deck.bracket].name}
               {deck.theme ? ` · ${deck.theme}` : ""}
@@ -306,7 +306,7 @@ export function WhyPanel({ candidate, reasons, deckCount }: { candidate: Candida
     <div className="panel hidden space-y-4 p-5 lg:block">
       <div>
         <div className="flex items-start justify-between gap-2">
-          <h2 className="font-heading text-2xl leading-tight font-bold">{candidate.name}</h2>
+          <h2 className="font-heading text-2xl leading-tight font-medium">{candidate.name}</h2>
           <ManaCost cost={candidate.manaCost} className="pt-1" />
         </div>
         <p className="text-xs text-muted-foreground">{candidate.typeLine}</p>
@@ -421,7 +421,7 @@ function DonePanel({
   return (
     <div className="panel flex w-full max-w-md flex-col items-center gap-4 p-8 text-center">
       <CelebrationCauldron className="-mt-2 text-[4.5px]" />
-      <h2 className="text-2xl font-bold">Your brew is ready</h2>
+      <h2 className="text-2xl font-medium">Your brew is ready</h2>
       <p className="text-muted-foreground">
         {stats.nonlands} spells and {stats.lands} lands picked.{" "}
         {openSpells > 0 && `Top suggestions will fill the ${openSpells} open spell slots. `}

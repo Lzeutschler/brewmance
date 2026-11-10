@@ -7,7 +7,16 @@ import type { DeckStats } from "@/lib/decks/stats";
 import type { Deck } from "@/lib/decks/types";
 import { cn } from "@/lib/utils";
 
-export function RoleMeters({ stats, template }: { stats: DeckStats; template: DeckTemplate }) {
+/** A share from 0 to 1 as a horizontal scale, so bars grow without animating their width. */
+function fill(have: number, target: number): React.CSSProperties {
+  return { transform: `scaleX(${target > 0 ? Math.min(1, have / target) : 1})` };
+}
+
+/**
+ * Role counts against their targets. `quiet` keeps roles that are covered neutral, so only the ones
+ * still short carry the accent (the deck editor); the swipe shows covered roles in green.
+ */
+export function RoleMeters({ stats, template, quiet = false }: { stats: DeckStats; template: DeckTemplate; quiet?: boolean }) {
   return (
     <div className="space-y-2.5">
       {TEMPLATE_ROLES.map((role) => {
@@ -17,14 +26,17 @@ export function RoleMeters({ stats, template }: { stats: DeckStats; template: De
           <div key={role} className="space-y-1">
             <div className="flex justify-between text-xs">
               <span className="text-muted-foreground">{TEMPLATE_ROLE_LABELS[role]}</span>
-              <span className={cn("tabular-nums", have >= target && "text-pick")}>
+              <span className={cn("tabular-nums", have >= target && (quiet ? "text-muted-foreground" : "text-pick"))}>
                 {have}/{target}
               </span>
             </div>
             <div className="h-1.5 overflow-hidden rounded-xs bg-ink shadow-[inset_0_1px_0_0_oklch(0_0_0/40%)]">
               <div
-                className={cn("h-full transition-all duration-500", have >= target ? "bg-pick" : "bg-brand")}
-                style={{ width: `${Math.min(100, (have / target) * 100)}%` }}
+                className={cn(
+                  "h-full origin-left transition-transform duration-500",
+                  have < target ? "bg-brand" : quiet ? "bg-foreground/30" : "bg-pick",
+                )}
+                style={fill(have, target)}
               />
             </div>
           </div>
@@ -51,8 +63,8 @@ export function CompactRoleMeters({ stats, template }: { stats: DeckStats; templ
             </div>
             <div className="h-1 overflow-hidden rounded-xs bg-ink">
               <div
-                className={cn("h-full transition-all duration-500", have >= target ? "bg-pick" : "bg-brand")}
-                style={{ width: `${Math.min(100, (have / target) * 100)}%` }}
+                className={cn("h-full origin-left transition-transform duration-500", have >= target ? "bg-pick" : "bg-brand")}
+                style={fill(have, target)}
               />
             </div>
           </div>
@@ -76,10 +88,10 @@ export function MiniCurve({ stats, template }: { stats: DeckStats; template: Dec
             />
             <div
               className={cn(
-                "w-full rounded-t-xs transition-all duration-500",
+                "h-full w-full origin-bottom rounded-t-xs transition-transform duration-500",
                 count > template.curve[i] ? "bg-pass/85" : "bg-brand/85",
               )}
-              style={{ height: `${(count / max) * 100}%` }}
+              style={{ transform: `scaleY(${count / max})` }}
             />
           </div>
           <span className="text-[11px] text-muted-foreground tabular-nums">{CURVE_LABELS[i]}</span>
@@ -114,10 +126,7 @@ export function DeckCounter({ deck, stats, template }: { deck: Deck; stats: Deck
         </div>
       </div>
       <div className="h-2 overflow-hidden rounded-xs bg-ink shadow-[inset_0_1px_0_0_oklch(0_0_0/40%)]">
-        <div
-          className="h-full bg-brand transition-all duration-500"
-          style={{ width: `${(stats.total / template.size) * 100}%` }}
-        />
+        <div className="h-full origin-left bg-brand transition-transform duration-500" style={fill(stats.total, template.size)} />
       </div>
     </div>
   );

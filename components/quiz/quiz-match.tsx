@@ -45,7 +45,7 @@ export function QuizMatch({ track }: { track: Track }) {
       </div>
 
       <motion.div className="space-y-3" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-        <h1 className="text-5xl font-extrabold text-[var(--heart)] italic sm:text-6xl">It&apos;s a match!</h1>
+        <h1 className="text-5xl font-semibold text-[var(--heart)] italic sm:text-6xl">It&apos;s a match!</h1>
         {error ? (
           <p className="text-destructive">Could not load commanders: {error.message}</p>
         ) : top ? (

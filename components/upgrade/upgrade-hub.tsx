@@ -45,7 +45,7 @@ export function UpgradeHub() {
 
       {own.length > 0 && (
         <section className="space-y-4">
-          <h2 className="text-2xl font-bold">Your decks</h2>
+          <h2 className="text-2xl font-medium">Your decks</h2>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {own.map((deck) => (
               <OwnDeckRow key={deck.id} deck={deck} upgrading={Boolean(upgrades[deck.id])} />
@@ -55,7 +55,7 @@ export function UpgradeHub() {
       )}
 
       <section className="space-y-4">
-        <h2 className="text-2xl font-bold">{own.length > 0 ? "Or start from a precon" : "Start from a precon"}</h2>
+        <h2 className="text-2xl font-medium">{own.length > 0 ? "Or start from a precon" : "Start from a precon"}</h2>
         <PreconPicker />
       </section>
     </div>
@@ -73,7 +73,7 @@ function OwnDeckRow({ deck, upgrading }: { deck: Deck; upgrading: boolean }) {
         style={deck.commander.image ? { backgroundImage: `url(${artCropUrl(deck.commander.image.key)})` } : undefined}
       />
       <span className="min-w-0 flex-1">
-        <span className="block truncate font-heading text-lg leading-tight font-bold">{deck.name}</span>
+        <span className="block truncate font-heading text-lg leading-tight font-medium">{deck.name}</span>
         <span className="block truncate text-xs text-muted-foreground">
           Bracket {deck.bracket} {BRACKET_INFO[deck.bracket].name}
           {deck.precon ? " · Precon" : ""}

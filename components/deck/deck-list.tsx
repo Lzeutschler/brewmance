@@ -72,26 +72,26 @@ function DeckTile({ deck, inProgress, upgrading }: { deck: Deck; inProgress: boo
   return (
     <Link
       href={inProgress ? `/build/${deck.id}` : upgrading ? `/upgrade/${deck.id}` : `/decks/${deck.id}`}
-      className="group panel flex flex-col overflow-hidden p-1.5 transition hover:-translate-y-1 hover:-rotate-[0.6deg] hover:border-brand/70"
+      className="panel flex flex-col overflow-hidden p-2 transition-[transform,border-color] duration-150 hover:-translate-y-0.5 hover:border-brand/70"
     >
       <div className="relative h-32 overflow-hidden rounded-md bg-muted">
         {art && (
           <div
-            className="absolute inset-0 bg-cover bg-[center_25%] transition duration-500 group-hover:scale-105"
+            className="absolute inset-0 bg-cover bg-[center_25%]"
             style={{ backgroundImage: `url(${art})` }}
           />
         )}
-        {(inProgress || upgrading) && <Badge className="absolute top-2 left-2">{inProgress ? "Brewing" : "Upgrading"}</Badge>}
+        {(inProgress || upgrading) && <Badge className="absolute top-2 left-2 border-transparent bg-ink/85 text-foreground">{inProgress ? "Brewing" : "Upgrading"}</Badge>}
       </div>
       {/* The commanders' colors as a thin band, like the frame color of a card. */}
-      <div className="mt-1.5 flex h-1.5 gap-px overflow-hidden rounded-xs" aria-hidden="true">
+      <div className="mt-2 flex h-1 gap-px overflow-hidden rounded-xs" aria-hidden="true">
         {(identity.length ? identity : ["C"]).map((color) => (
           <span key={color} className="flex-1" style={{ backgroundColor: `var(--mana-${color.toLowerCase()})` }} />
         ))}
       </div>
-      <div className="space-y-1 px-2 pt-2.5 pb-1.5">
+      <div className="space-y-1 px-2 pt-2 pb-1">
         <div className="flex items-center justify-between gap-2">
-          <h3 className="truncate text-xl leading-tight font-bold">{deck.name}</h3>
+          <h3 className="truncate text-xl leading-tight font-medium">{deck.name}</h3>
           <ColorIdentity colors={identity} />
         </div>
         <p className="text-xs text-muted-foreground">

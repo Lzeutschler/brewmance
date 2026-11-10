@@ -8,7 +8,7 @@ export function CommandZoneCards({ deck }: { deck: Pick<Deck, "commander" | "par
   return (
     <div className={cn("shrink-0 self-center md:self-start", deck.partner ? "grid w-80 grid-cols-2 gap-2 md:w-96" : "w-48 md:w-52")}>
       {commandZone(deck).map((card) => (
-        <CardImage key={card.id} card={card} flippable />
+        <CardImage key={card.id} card={card} flippable eager />
       ))}
     </div>
   );

@@ -81,6 +81,11 @@ function Editor({ deck, hasSession, upgrading }: { deck: Deck; hasSession: boole
   const complete = !hasSession && deckCount(deck.entries) >= mainDeckSize(deck);
 
   const update = (fn: (deck: Deck) => Deck) => updateDeck(deck.id, fn);
+  const upgradeButton = (upgrading || canUpgrade(deck)) && (
+    <Button variant={complete ? "default" : "outline"} nativeButton={false} render={<Link href={`/upgrade/${deck.id}`} />}>
+      <SwapIcon /> {upgrading ? "Continue upgrade" : "Upgrade"}
+    </Button>
+  );
 
   const addCard = (card: Card) => {
     const existing = deck.entries.find((e) => e.card.id === card.id);
@@ -144,7 +149,7 @@ function Editor({ deck, hasSession, upgrading }: { deck: Deck; hasSession: boole
               const name = e.currentTarget.value.trim();
               if (name && name !== deck.name) update((d) => ({ ...d, name }));
             }}
-            className="h-auto border-transparent bg-transparent px-2 -mx-2 font-heading text-3xl leading-tight font-extrabold shadow-none hover:border-input md:text-4xl"
+            className="h-auto border-transparent bg-transparent px-2 -mx-2 font-heading text-3xl leading-tight font-medium shadow-none hover:border-input md:text-4xl"
           />
           <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
             <ColorIdentity colors={deckIdentity(deck)} />
@@ -166,30 +171,30 @@ function Editor({ deck, hasSession, upgrading }: { deck: Deck; hasSession: boole
             </label>
             <EdhrecLink href={edhrecCommanderUrl(commandZone(deck), deck.bracket, deck.theme)}>Compare on EDHREC</EdhrecLink>
           </div>
-          <div className="mt-auto flex flex-wrap gap-2">
+          {/* One main action: swiping while cards are missing, the upgrade once the deck is full. */}
+          <div className="mt-auto flex flex-wrap items-center gap-2">
+            {complete && upgradeButton}
             <Button variant={complete ? "outline" : "default"} nativeButton={false} render={<Link href={`/build/${deck.id}`} />}>
               <HeartIcon /> {hasSession ? "Continue swiping" : "Swipe more cards"}
             </Button>
-            {(upgrading || canUpgrade(deck)) && (
-              <Button variant={complete ? "default" : "outline"} nativeButton={false} render={<Link href={`/upgrade/${deck.id}`} />}>
-                <SwapIcon /> {upgrading ? "Continue upgrade" : "Upgrade"}
-              </Button>
-            )}
+            {!complete && upgradeButton}
+            <Button variant="outline" nativeButton={false} render={<Link href={`/goldfish/${deck.id}`} />}>
+              <PlayIcon /> Goldfish
+            </Button>
+            <span className="mx-1 h-6 w-px bg-border max-sm:hidden" aria-hidden />
             <ExportDialog deck={deck}>
-              <Button variant="outline">
+              <Button variant="ghost">
                 <DownloadSimpleIcon /> Export
               </Button>
             </ExportDialog>
             <ShareButton
+              variant="ghost"
               route="/d"
               text={sharedDeckText(deck)}
               title={deck.name}
               description="Anyone with the link can see, goldfish and copy this deck."
             />
-            <Button variant="outline" nativeButton={false} render={<Link href={`/goldfish/${deck.id}`} />}>
-              <PlayIcon /> Goldfish
-            </Button>
-            <Button variant="ghost" className="text-destructive" onClick={remove}>
+            <Button variant="ghost" className="hover:bg-destructive/12 hover:text-destructive sm:ml-auto" onClick={remove}>
               <TrashIcon /> Delete
             </Button>
           </div>
@@ -260,7 +265,7 @@ function Editor({ deck, hasSession, upgrading }: { deck: Deck; hasSession: boole
                             <CardImage card={entry.card} size="normal" />
                             <span className="absolute top-[4.5%] right-[6%] flex gap-1">
                               {entry.quantity > 1 && (
-                                <span className="rounded-sm bg-ink/90 px-1.5 py-0.5 text-xs font-bold tabular-nums shadow-xs">
+                                <span className="rounded-sm bg-ink/90 px-1.5 py-0.5 text-xs font-semibold tabular-nums shadow-xs">
                                   ×{entry.quantity}
                                 </span>
                               )}

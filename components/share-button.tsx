@@ -16,11 +16,13 @@ export function ShareButton({
   text,
   title,
   description,
+  variant = "outline",
 }: {
   route: "/d" | "/q";
   text: string;
   title: string;
   description: string;
+  variant?: "outline" | "ghost";
 }) {
   const [url, setUrl] = useState<string | null>(null);
 
@@ -54,7 +56,7 @@ export function ShareButton({
   };
 
   return (
-    <Button variant="outline" onClick={share} disabled={!url}>
+    <Button variant={variant} onClick={share} disabled={!url}>
       <ShareNetworkIcon /> Share
     </Button>
   );

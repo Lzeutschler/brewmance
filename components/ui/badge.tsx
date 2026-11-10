@@ -5,11 +5,11 @@ import { cn } from "cn"
 
 // Badges are square-cornered tags in a semi-condensed face, like the type line labels on deck sites.
 const badgeVariants = cva(
-  "group/badge inline-flex h-6 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-sm border border-transparent px-2 text-xs leading-none font-semibold whitespace-nowrap transition-colors [font-stretch:88%] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive [&>svg]:pointer-events-none [&>svg]:size-3!",
+  "group/badge inline-flex h-6 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-sm border border-transparent px-2 text-xs leading-none font-medium whitespace-nowrap transition-colors [font-stretch:88%] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive [&>svg]:pointer-events-none [&>svg]:size-3!",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground [a]:hover:bg-primary/85",
+        default: "border-brand/35 bg-brand/15 text-[var(--ring)] [a]:hover:bg-brand/25",
         secondary:
           "border-border bg-secondary text-secondary-foreground [a]:hover:bg-accent",
         destructive:

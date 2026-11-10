@@ -98,7 +98,7 @@ export function Shortlist({ track }: { track: Track }) {
 
       {entries.length > 1 && (
         <section className="space-y-4">
-          <h2 className="text-2xl font-bold">Or choose another</h2>
+          <h2 className="text-2xl font-medium">Or choose another</h2>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
             {entries.map(({ decision, scored }) => {
               const { commander } = scored;

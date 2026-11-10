@@ -25,7 +25,7 @@ export function MulliganOverlay({ game, act }: { game: GameState; act: (fn: (g: 
     // Scrolls when the hand does not fit, e.g. on phones, instead of pushing the buttons off screen.
     <div className="absolute inset-0 z-40 flex flex-col items-center justify-center-safe gap-4 overflow-y-auto bg-ink/85 p-4 sm:gap-6 sm:p-6">
       <div className="text-center">
-        <h2 className="text-2xl font-extrabold sm:text-4xl">{choosing ? `Put ${toBottom} on the bottom` : "Opening hand"}</h2>
+        <h2 className="text-2xl font-medium sm:text-4xl">{choosing ? `Put ${toBottom} on the bottom` : "Opening hand"}</h2>
         <p className="text-sm text-muted-foreground">
           {choosing
             ? `Choose ${toBottom} card${toBottom > 1 ? "s" : ""} to put on the bottom of your library.`

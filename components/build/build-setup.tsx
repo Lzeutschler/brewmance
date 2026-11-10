@@ -44,7 +44,7 @@ export function BuildSetup() {
       {commander && <CommanderSetup commander={commander} onClose={() => setChosen(null)} />}
 
       <section className="space-y-4">
-        <h2 className="text-2xl font-bold">{commander ? "Or choose another commander" : "Choose your commander"}</h2>
+        <h2 className="text-2xl font-medium">{commander ? "Or choose another commander" : "Choose your commander"}</h2>
         <CommanderPicker selected={commander} onSelect={selectCommander} />
       </section>
     </div>

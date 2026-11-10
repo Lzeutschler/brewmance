@@ -114,7 +114,7 @@ function PreconTile({ precon, busy, disabled, onOpen }: { precon: PreconSummary;
       disabled={disabled}
       aria-busy={busy}
       className={cn(
-        "group panel flex flex-col overflow-hidden p-1.5 text-left transition hover:-translate-y-1 hover:-rotate-[0.6deg] hover:border-brand/70 disabled:pointer-events-none",
+        "panel flex flex-col overflow-hidden p-2 text-left transition-[transform,border-color] duration-150 hover:-translate-y-0.5 hover:border-brand/70 disabled:pointer-events-none",
         disabled && !busy && "opacity-60",
       )}
     >
@@ -125,7 +125,7 @@ function PreconTile({ precon, busy, disabled, onOpen }: { precon: PreconSummary;
             src={cardImageUrl(precon.image, "art_crop")}
             alt=""
             loading="lazy"
-            className="size-full object-cover object-[center_25%] transition duration-500 group-hover:scale-105"
+            className="size-full object-cover object-[center_25%]"
           />
         )}
         <span className="numeral absolute top-1.5 left-1.5 rounded-sm bg-ink/85 px-1.5 py-0.5 text-xs">{precon.releaseDate.slice(0, 4)}</span>
@@ -135,14 +135,14 @@ function PreconTile({ precon, busy, disabled, onOpen }: { precon: PreconSummary;
           </span>
         )}
       </div>
-      <div className="mt-1.5 flex h-1.5 gap-px overflow-hidden rounded-xs" aria-hidden="true">
+      <div className="mt-2 flex h-1 gap-px overflow-hidden rounded-xs" aria-hidden="true">
         {colors.map((color) => (
           <span key={color} className="flex-1" style={{ backgroundColor: `var(--mana-${color.toLowerCase()})` }} />
         ))}
       </div>
-      <div className="space-y-1 px-2 pt-2.5 pb-1.5">
+      <div className="space-y-1 px-2 pt-2 pb-1">
         <div className="flex items-center justify-between gap-2">
-          <h3 className="truncate text-lg leading-tight font-bold">{precon.name}</h3>
+          <h3 className="truncate text-lg leading-tight font-medium">{precon.name}</h3>
           <ColorIdentity colors={precon.colorIdentity} className="max-sm:hidden" />
         </div>
         <p className="truncate text-xs text-muted-foreground">{precon.commanders.join(" & ")}</p>

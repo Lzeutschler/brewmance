@@ -12,6 +12,7 @@
   --font-mana: var(--font-mana-symbols);
   --color-brand: var(--brand);
   --color-teal: var(--teal);
+  --color-ember: var(--ember);
   --color-table: var(--table);
   --color-ink: var(--ink);
   --color-pick: var(--pick);
@@ -53,6 +54,9 @@
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
 
+  /* One easing curve for every transition: quick out, soft landing. */
+  --default-transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+
   /* Small, deliberate corners: controls 3px, surfaces 6px, dialogs 8px. Cards keep their own 4.75%. */
   --radius-xs: 2px;
   --radius-sm: 2px;
@@ -76,7 +80,8 @@
 
 :root {
   /* Arcane Slate: cool graphite surfaces, periwinkle as the brand accent (blue mana, the planeswalker
-     spark) and teal for secondary highlights. Contrast on the background: text 15.6:1, brand 7.7:1. */
+     spark) and teal for secondary highlights. Contrast on the background: text 15.6:1, brand 7.7:1.
+     The brand color marks selections, progress and key figures; the main action is card paper. */
   --ink: #0b0e13;
   --background: #11141a;
   --foreground: #e8ecf3;
@@ -84,8 +89,8 @@
   --card-foreground: #e8ecf3;
   --popover: #1e2430;
   --popover-foreground: #e8ecf3;
-  --primary: #8ea2ff;
-  --primary-foreground: #0e1220;
+  --primary: #ebe5d6;
+  --primary-foreground: #14171d;
   --secondary: #252c38;
   --secondary-foreground: #e8ecf3;
   --muted: #222833;
@@ -111,11 +116,16 @@
   --sidebar-border: #2f3746;
   --sidebar-ring: #a9b8ff;
 
+  /* The main button: the paper of a card's text box, with a darker edge it presses down onto. */
+  --primary-hover: #f7f2e6;
+  --primary-edge: #8f8873;
   --brand: #8ea2ff;
-  /* Hover fill and the pressed bottom edge of brand buttons. */
+  /* Lighter and darker steps of the brand color, as in the brand mark. */
   --brand-hover: #a6b6ff;
   --brand-edge: #4553a8;
   --teal: #5ad1c8;
+  /* Warnings and values changed from the recommendation. */
+  --ember: #e3b26a;
   /* Only the heart in the brand mark. */
   --heart: #f28fb8;
   --table: #141b25;
@@ -181,7 +191,7 @@
 @utility ui-label {
   font-family: var(--font-sans);
   font-stretch: 85%;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 0.8125rem;
   line-height: 1.125rem;
   letter-spacing: 0.005em;
@@ -190,7 +200,7 @@
 @utility numeral {
   font-family: var(--font-sans);
   font-stretch: 75%;
-  font-weight: 800;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
   line-height: 1;
 }
