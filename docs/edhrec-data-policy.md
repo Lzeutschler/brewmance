@@ -12,12 +12,12 @@ Community-Entwickler ausdrücklich ein, EDHREC-Daten in eigenen Projekten zu nut
 | Keine Doku, Felder können sich jederzeit ändern. | Die Antworten werden mit zod geprüft. Bei unerwartetem Format greift die eigene Bewertung. |
 | Wenn das Projekt läuft, gern zeigen: edhrec@edhrec.com. | Offen: nach dem Launch eine Mail schicken. |
 | Patreon-Abo, falls möglich. | Freiwillig. |
-| Die Policy wird gerade überarbeitet und kann sich ändern. | `RECS_SOURCE=off` schaltet EDHREC sofort ab (siehe README). Plan B: `docs/recommendations-plan-b.md`. |
+| Die Policy wird gerade überarbeitet und kann sich ändern. | `RECS_SOURCE=off` schaltet EDHREC sofort ab (siehe `docs/development.md`). |
 
 **Grenze:** Der Abstand gilt pro Server-Instanz. Startet Vercel bei viel Verkehr mehrere Instanzen, können
 zusammen kurz mehr als 1 Anfrage pro Sekunde rausgehen. Dagegen helfen der CDN-Cache von `/api/candidates`
 (einen Tag) und `"use cache"`. Hart garantieren ließe sich das Limit nur mit einem geteilten Zähler oder
-`"use cache: remote"` (siehe `docs/reddit-launch-polish.md`, Punkt 10).
+`"use cache: remote"`.
 
 **Bulk-Daten (genutzt als Ersatz):** `https://edhrec.com/data/data.tgz` (275 MB komprimiert, Stand 23.10.2026) enthält `edhrec.csv`
 (672 MB) und eine `LICENSE.txt`. Die Lizenz erlaubt die Nutzung in Community-Projekten, aber **keine kommerzielle

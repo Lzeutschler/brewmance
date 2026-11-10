@@ -45,7 +45,7 @@ export const USER_AGENT = `${SITE.name}/0.1 <${OPERATOR.email}> (+${SITE.url})`;
 
 /** Where the Feedback dialog sends people. Not everyone from Reddit has a GitHub account, hence the email too. */
 export const FEEDBACK = {
-  issues: "https://github.com/Lzeutschler/Magic_Commander_Tinder/issues/new",
+  issues: "https://github.com/Lzeutschler/brewmance/issues/new",
   /** Leonard's own address; the Impressum, privacy policy and User-Agent keep `OPERATOR.email`. */
   email: "leonard.zeutschler@45level.com",
   /** The launch thread on Reddit; set it once the post is up and the dialog offers it first. */

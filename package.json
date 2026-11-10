@@ -2,6 +2,7 @@
   "name": "brewmance",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
   "scripts": {
     "data": "tsx scripts/build-card-db.ts --force && tsx scripts/build-recs-snapshot.ts --force && tsx scripts/build-precons.ts --force",
     "precons": "tsx scripts/build-precons.ts --force --save",

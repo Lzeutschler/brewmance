@@ -1,0 +1,182 @@
+# Development
+
+How Brewmance works under the hood: what each part does, where its data comes from, how the project is
+laid out and how it is deployed. The look is described in [design.md](design.md).
+
+## Stack
+
+Next.js 16 (App Router, Cache Components) · TypeScript · Tailwind CSS v4 · shadcn/ui (Base UI) ·
+Motion · dnd-kit · Zustand · TanStack Query · Zod · Recharts · Vitest · Playwright. Deploys to Vercel as is.
+
+Decks are stored in the browser (localStorage); there are no accounts.
+
+## What each part does
+
+- **Build** (`/build`): pick a commander and a bracket, then swipe through cards that fit. The deck keeps
+  its mana curve, ramp, draw, interaction, board wipes, protection and finishers in balance, with targets
+  tuned to what EDHREC decks of that commander play, and respects the bracket's Game Changer, mass land
+  denial, extra-turn and two-card combo limits (combos via Commander Spellbook). Deck settings (land count,
+  role targets, curve, synergy vs. staples, budget per card, Game Changers) can be changed before and while
+  swiping. Finish with basics, edit, import and export, or share the deck as a link (`/d/<code>`: the list
+  itself, deflated into the URL, with a preview image). See [deckbuilding-review.md](deckbuilding-review.md)
+  (German) for the reasoning behind the numbers.
+- **Upgrade** (`/upgrade`): start from one of about 180 precons, a deck built here or an imported list.
+  Each card is a swap: the card that does the least for the deck (rarely played with this commander, a
+  crowded role or curve slot) goes, the best-scoring replacement comes in. Swipe right to swap, left to
+  pass, up for maybe, or keep the card to cut and get another cut. Spells trade for spells and lands for
+  lands, so the deck keeps its size and land count; the bracket rules, an optional total budget (no single
+  card over 40% of it) and the deck settings apply. The summary lists the swaps and copies a shopping list.
+- **Quiz** (`/quiz`): a deck of swipe cards. Newcomers get vibe questions (hero or villain, favorite
+  universe such as Lord of the Rings or Marvel, creatures, art mood); experienced players get questions
+  about win condition, engine, table politics, tempo, complexity, colors and creature types. Then they
+  swipe through the best-matching commanders with a "why this fits" for each, toggle popular picks vs.
+  hidden gems, and start building from their shortlist or share it as a link (`/q/<code>`, with a preview
+  image).
+- **Goldfish** (`/goldfish`): an MTG Arena-style sandbox to test a deck. Drag cards between zones, click to
+  play or tap, right-click for counters, tokens, flip and zone moves. London mulligan (first one free),
+  scry/surveil/mill/search, commander tax, undo, keyboard shortcuts (D, U, N, S, M, ⌘Z) and an opening-hand
+  simulator.
+
+## Getting started
+
+```bash
+pnpm install
+pnpm dev
+```
+
+`pnpm dev` and `pnpm build` first run `scripts/build-card-db.ts`, which downloads Scryfall's bulk data
+(about 30 MB, cached in `.cache/`) and writes:
+
+| File | Used by |
+| --- | --- |
+| `data/cards.json` | API routes: every Commander-legal card with roles (ramp, draw, removal, …) |
+| `data/tokens.json` | API routes: tokens for the goldfish sandbox (`/api/tokens`) |
+| `public/data/commanders.json` | Client: all legal commanders with themes, tribes, archetypes and set |
+
+Then `scripts/build-recs-snapshot.ts` downloads EDHREC's bulk data (`edhrec.com/data/data.tgz`, about
+275 MB, cached in `.cache/edhrec-bulk/`) and condenses it into `data/recs-snapshot/{commander}.json`
+(about 3,300 files, 26 MB): each commander's deck count, its 200 most played cards and up to 60 more with
+high synergy. API routes read these when EDHREC's pages cannot be asked. The step takes about 20 seconds;
+if it fails, the build goes on without the snapshot.
+
+Last, `scripts/build-precons.ts` writes the precons for the upgrade swipe: `public/data/precons.json` (name,
+commanders, colors and image of each) and `public/data/precons/{id}.json` (one card list each). Precon lists
+never change, so they live in the repository (`scripts/precons-baseline.json`, from MTGJSON) and a build
+only asks MTGJSON for its deck index and for decks released since. `pnpm precons` saves those new decks
+into the baseline, worth committing now and then; without it they are fetched again on every fresh build.
+
+The data is rebuilt when it is older than a week; `pnpm data` rebuilds it now.
+
+### Scripts
+
+| Command | What it does |
+| --- | --- |
+| `pnpm dev` | Dev server, after the data build above |
+| `pnpm build` | Production build, after the data build above |
+| `pnpm data` | Rebuilds all card data now |
+| `pnpm precons` | Saves newly released precons into the baseline |
+| `pnpm test` | Unit tests (Vitest) |
+| `pnpm test:e2e` | Browser tests (Playwright). They need network for EDHREC and Scryfall; run `pnpm exec playwright install chromium` once. `PORT=3001 pnpm test:e2e` runs them against a dev server on another port. |
+| `pnpm lint`, `pnpm typecheck` | ESLint and TypeScript |
+
+## Data sources
+
+- **[Scryfall](https://scryfall.com/docs/api)**: card data, images and the Game Changer flag
+  (`game_changer`). Card roles come from Scryfall Tagger oracle tags (`oracle_tags` bulk file).
+- **[EDHREC](https://edhrec.com)**: per-commander card suggestions with synergy and inclusion,
+  filtered by bracket and theme. EDHREC has no official API; the app reads the JSON its own site uses
+  (`json.edhrec.com/pages/commanders/{slug}[/{bracket}][/{theme}].json`) through a cached server
+  route. When EDHREC cannot be asked (down, busy or rate limiting us), the suggestions come from a
+  snapshot of EDHREC's bulk data instead (across all brackets, without themes); commanders EDHREC has
+  no data on get the app's own popularity/theme scoring.
+  EDHREC allows this under its data policy (at most one request per second, a User-Agent with a contact
+  email; see [edhrec-data-policy.md](edhrec-data-policy.md), German). Requests to EDHREC are spaced one
+  second apart per server instance and during the card database build.
+- **[Commander Spellbook](https://commanderspellbook.com)**: the combos among a commander and its
+  candidate cards, for the bracket's two-card combo rule and the combo list in the deck editor.
+- **[MTGJSON](https://mtgjson.com)** (MIT): the card lists of the preconstructed Commander decks, read at
+  build time only (`DeckList.json` and `decks/{fileName}.json`). Collector's Editions and reprints of a
+  deck are folded into one entry.
+- **Commander archetypes** for the quiz (`lib/tagging/archetypes.ts`) combine Scryfall Tagger tags on
+  each commander with EDHREC theme pages (`pages/tags/{theme}.json`, top commanders per theme) and color
+  pages (`pages/commanders/{colors}.json`, deck totals). The card database build fetches these ~85
+  pages one per second, caches them in `.cache/edhrec/` for a week and keeps going without them if EDHREC is down.
+
+## Project layout
+
+```
+app/                 pages and API routes (api/candidates, api/commander-insights, api/cards/*), legal pages, metadata routes
+components/          UI: home/, build/ (commander + bracket picker), swipe/, upgrade/, quiz/, deck/ (editor), goldfish/, card/,
+                     ui/ (shadcn), legal/ (prose), icons.tsx (Phosphor + Mana font)
+lib/cards/           card types, names/slugs, mana helpers, image URLs
+lib/tagging/         roles (Tagger tags), commander themes, tribes and archetypes
+lib/quiz/            quiz questions, franchises and the commander scoring
+lib/deckbuilder/     deck template, bracket rules, scoring, swipe session, upgrade swaps, basic land fill
+lib/precons/         precon lists: MTGJSON condensing and turning a list into a deck
+lib/deck-io/         deck list import/export
+lib/goldfish/        pure game actions (zones, mulligan, tokens, …) and the opening-hand simulator
+lib/server/          server-only card database and candidate pool
+lib/site.ts          site URL, description, feedback addresses and the provider details for Impressum and privacy policy
+stores/              decks.ts (persisted decks, swipe sessions and upgrades), game.ts (goldfish game with undo),
+                     quiz.ts (persisted quiz answers and commander shortlist)
+scripts/             card database, recommendation snapshot and precon builds
+docs/                this file, design.md and working notes in German
+```
+
+## Deployment
+
+The app deploys to Vercel as is: import the repository, keep the detected Next.js preset and the default
+build command (`pnpm build`, which first runs the data build).
+
+### Environment variables
+
+| Variable | Required | Purpose |
+| --- | --- | --- |
+| `NEXT_PUBLIC_SITE_URL` | recommended | Public origin without trailing slash, e.g. `https://www.brewmance.app`. Used for `metadataBase` (canonical and Open Graph URLs), `robots.txt` and `sitemap.xml`. |
+| `RECS_SOURCE` | no | Where deck statistics come from: `edhrec` (default) or `off`. `off` sends no request to EDHREC, neither at runtime nor in the build, removes the bulk data snapshot, and suggestions fall back to Scryfall popularity, themes and roles. Unknown values count as `off`. |
+
+Without `NEXT_PUBLIC_SITE_URL`, `lib/site.ts` falls back to Vercel's `VERCEL_PROJECT_PRODUCTION_URL`
+(the production domain, set automatically) and then to `http://localhost:3000`.
+
+To switch EDHREC off, set `RECS_SOURCE=off` for Production (build and runtime both read it) and redeploy.
+The new deployment rebuilds the card data without EDHREC themes, and Vercel's CDN does not serve
+responses cached by the previous deployment.
+
+### Domain
+
+The site runs at `www.brewmance.app`; `brewmance.app` redirects there. To use another domain, add it in
+*Project Settings → Domains*, point DNS to Vercel as shown there, and redirect the `www` variant (or the
+apex) to the primary domain. Vercel issues the TLS certificate. Then set `NEXT_PUBLIC_SITE_URL` to the
+primary domain.
+
+Optional: set *Functions → Region* to Frankfurt (`fra1`) so API routes run in the EU.
+
+### Weekly card data refresh (Deploy Hook)
+
+1. In Vercel, *Project Settings → Git → Deploy Hooks*, create a hook for the `main` branch.
+2. In GitHub, *Settings → Secrets and variables → Actions*, add the hook URL as `VERCEL_DEPLOY_HOOK_URL`.
+
+`.github/workflows/refresh-card-data.yml` calls the hook every week, which rebuilds the site with fresh
+Scryfall data.
+
+### Security headers
+
+`next.config.ts` sends a Content Security Policy (images and mana symbols only from `cards.scryfall.io`
+and `svgs.scryfall.io`, no framing), `Referrer-Policy`, `X-Content-Type-Options`, `Permissions-Policy`,
+`Cross-Origin-Opener-Policy` and HSTS. Preview deployments additionally allow `vercel.live` for the
+Vercel Toolbar. If you add a third-party script, image host or API that the browser calls directly,
+extend the CSP there and update the privacy policy (`app/datenschutz/page.tsx`).
+
+### Legal setup
+
+- Brewmance runs as Leonard's private, non-commercial hobby project, which fits Vercel's Hobby plan.
+  Provider details for `/impressum` and `/datenschutz` live in `lib/site.ts` (`OPERATOR`).
+- If the project ever earns money (ads, donations, paid features) or moves to a company, revisit the
+  Impressum, the privacy policy and the Vercel plan.
+
+## Pages and SEO
+
+`/about`, `/impressum` and `/datenschutz` (German, with an English translation; `/imprint` and `/privacy`
+redirect there). Metadata, Open Graph and Twitter cards are set in `app/layout.tsx`; the social image
+(`app/opengraph-image.tsx`), favicon (`app/icon.svg`), Apple touch icon, `robots.txt`, `sitemap.xml` and
+the web app manifest are generated from `app/`.

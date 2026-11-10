@@ -51,3 +51,6 @@ next-env.d.ts
 
 # launch video from the /brag skill
 /brag-output/
+
+# private working notes, kept locally
+/notes/
