@@ -9,7 +9,6 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-archivo);
   --font-heading: var(--font-alegreya);
-  --font-flavor: var(--font-alegreya-italic), var(--font-alegreya);
   --font-mana: var(--font-mana-symbols);
   --color-brand: var(--brand);
   --color-teal: var(--teal);

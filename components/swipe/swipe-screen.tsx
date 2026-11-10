@@ -12,7 +12,6 @@ import { CardSheet } from "@/components/card/card-sheet";
 import { ManaCost } from "@/components/card/mana";
 import { BrewLoader, CelebrationCauldron } from "@/components/cauldron";
 import { EdhrecLink } from "@/components/edhrec-link";
-import { FlavorText } from "@/components/flavor-text";
 import {
   ArrowLeftIcon,
   ArrowUUpLeftIcon,
@@ -42,7 +41,6 @@ import { edhrecCardUrl, edhrecCommanderUrl } from "@/lib/edhrec/links";
 import { commandZone, commanderTitle, deckIdentity } from "@/lib/decks/command-zone";
 import type { Deck } from "@/lib/decks/types";
 import { randomSeed } from "@/lib/random";
-import { FLAVOR } from "@/lib/flavor";
 import { ROLE_LABELS } from "@/lib/tagging/roles";
 import { cn } from "@/lib/utils";
 import { useDeckStore, useDecksHydrated } from "@/stores/decks";
@@ -437,7 +435,6 @@ function DonePanel({
         </Button>
         <Button onClick={onFinish}>Finish &amp; open editor</Button>
       </div>
-      <FlavorText lines={FLAVOR.brewed} seed={deck.id} />
     </div>
   );
 }

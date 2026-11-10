@@ -14,7 +14,6 @@ import { CardSheet } from "@/components/card/card-sheet";
 import { ColorIdentity } from "@/components/card/mana";
 import { CelebrationCauldron } from "@/components/cauldron";
 import { EdhrecLink } from "@/components/edhrec-link";
-import { FlavorText } from "@/components/flavor-text";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -56,7 +55,6 @@ import { deckCount, deckStats } from "@/lib/decks/stats";
 import type { Deck } from "@/lib/decks/types";
 import { edhrecCommanderUrl } from "@/lib/edhrec/links";
 import type { Bracket } from "@/lib/edhrec/types";
-import { FLAVOR } from "@/lib/flavor";
 import { cn } from "@/lib/utils";
 import { useDeckStore, useDecksHydrated } from "@/stores/decks";
 
@@ -577,11 +575,6 @@ function UpgradeSummary({
         )}
         <Button onClick={onFinish}>{made.length > 0 ? "Finish & open deck" : "Open deck"}</Button>
       </div>
-      {made.length > 0 ? (
-        <FlavorText lines={FLAVOR.upgraded} seed={deck.id} />
-      ) : (
-        !swapsLeft && !overBudget && <FlavorText lines={FLAVOR.settled} seed={deck.id} />
-      )}
       <CardSheet card={inspected} onClose={() => setInspected(null)} />
     </div>
   );

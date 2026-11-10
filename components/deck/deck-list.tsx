@@ -4,14 +4,12 @@ import Link from "next/link";
 
 import { ColorIdentity } from "@/components/card/mana";
 import { EmptyCauldron } from "@/components/cauldron";
-import { FlavorText } from "@/components/flavor-text";
 import { PlusIcon, UploadSimpleIcon } from "@/components/icons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cardImageUrl } from "@/lib/cards/image";
 import { BRACKET_INFO } from "@/lib/deckbuilder/brackets";
-import { FLAVOR } from "@/lib/flavor";
 import { deckCount } from "@/lib/decks/stats";
 import { deckIdentity, mainDeckSize } from "@/lib/decks/command-zone";
 import type { Deck } from "@/lib/decks/types";
@@ -41,7 +39,6 @@ export function DeckList({ limit }: { limit?: number }) {
       <EmptyCauldron
         title="Your cauldron is empty"
         description="Brew your first deck by swiping, or pour in a list you already have."
-        flavor={<FlavorText lines={FLAVOR.empty} seed="decks" />}
         actions={
           <>
             <Button nativeButton={false} render={<Link href="/build" />}>

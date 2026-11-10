@@ -143,14 +143,11 @@ export function EmptyCauldron({
   title,
   description,
   actions,
-  flavor,
   className,
 }: {
   title: string;
   description?: React.ReactNode;
   actions?: React.ReactNode;
-  /** A line of flavor text below everything else. */
-  flavor?: React.ReactNode;
   className?: string;
 }) {
   return (
@@ -161,7 +158,6 @@ export function EmptyCauldron({
         {description && <p className="max-w-md text-muted-foreground">{description}</p>}
       </div>
       {actions && <div className="flex flex-wrap justify-center gap-2">{actions}</div>}
-      {flavor && <div className="w-full max-w-md">{flavor}</div>}
     </div>
   );
 }
