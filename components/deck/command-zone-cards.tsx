@@ -7,8 +7,11 @@ import { cn } from "@/lib/utils";
 export function CommandZoneCards({ deck }: { deck: Pick<Deck, "commander" | "partner"> }) {
   return (
     <div className={cn("shrink-0 self-center md:self-start", deck.partner ? "grid w-80 grid-cols-2 gap-2 md:w-96" : "w-48 md:w-52")}>
+      {/* The commander is the foil of the deck: a sheen crosses it when the pointer comes onto it. */}
       {commandZone(deck).map((card) => (
-        <CardImage key={card.id} card={card} flippable eager />
+        <div key={card.id} className="foil">
+          <CardImage card={card} flippable eager />
+        </div>
       ))}
     </div>
   );

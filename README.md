@@ -88,8 +88,13 @@ recommendation. Text and accents meet WCAG AA (text 15.6:1, brand 7.7:1 on the b
   than 600. No upper-case eyebrows over headings, no gradient text.
 - **Shape:** small radii (3px controls, 6px panels, 8px dialogs); cards keep their printed 4.75% corner.
   Shadows are hard ink edges plus a short drop (`shadow-sm` … `shadow-2xl` are redefined), no glows.
-- **Motion:** one easing curve for every transition (`--default-transition-timing-function`). Bars grow by
-  `transform`, never by animating width or height; hovers change a color or lift a few pixels.
+- **Motion:** one easing curve for every interface transition (`--default-transition-timing-function`). Bars
+  grow by `transform`, never by animating width or height; hovers change a color or lift a few pixels.
+- **Small moments:** kept to what is rare or just finished, never next to something to decide, and without
+  extra copy. A finished deck or upgrade steams in the deck's own colors, a check pops when a role reaches
+  its target, counters tick, the next card to cut rises into its strip, the commander on a deck page has a
+  foil sheen on hover, and the home page cauldron bubbles faster while the main button is hovered. All of it
+  stops under reduced motion.
 - **Surfaces:** `panel` (raised), `panel-inset` (recessed well), `playmat` (goldfish table). These are
   `@utility` classes, so variants such as `hover:` or `[&_h3]:` work on them.
 - **Icons:** [Phosphor](https://phosphoricons.com) in the bold weight via `components/icons.tsx`, plus

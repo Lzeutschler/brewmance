@@ -28,6 +28,7 @@ import { DeckSettingsDialog } from "@/components/swipe/deck-settings-dialog";
 import { MiniCurve, RoleMeters } from "@/components/swipe/deck-progress";
 import { SwipeButtons, SwipeStack, useSwipeKeys } from "@/components/swipe/swipe-controls";
 import { CompactWhy, FullScreenMessage, WhyPanel } from "@/components/swipe/swipe-screen";
+import { Tick } from "@/components/tick";
 import { Button } from "@/components/ui/button";
 import { cardImageUrl } from "@/lib/cards/image";
 import type { Card } from "@/lib/cards/types";
@@ -428,17 +429,20 @@ function UpgradeBoard({ deck, session, pool }: { deck: Deck; session: UpgradeSes
 function CutStrip({ swap, reason, onKeep, onInspect }: { swap: Swap; reason?: string; onKeep: () => void; onInspect: () => void }) {
   return (
     <div className="panel flex w-full max-w-md items-center gap-3 p-2 pr-3" data-testid="cut-strip">
-      <CardHoverPreview card={swap.out}>
-        <button type="button" onClick={onInspect} aria-label={`Look at ${swap.out.name}`} className="w-11 shrink-0 rounded-[4.75%] sm:w-12">
-          <CardImage card={swap.out} size="small" className="shadow-sm" />
-        </button>
-      </CardHoverPreview>
-      <div className="min-w-0 flex-1">
-        <div className="ui-label text-xs text-pass">Swap out</div>
-        <div className="truncate font-heading text-lg leading-tight font-medium" data-testid="cut-name">
-          {swap.out.name}
+      {/* Keyed by the card, so each new cut rises into the strip. */}
+      <div key={swap.out.id} className="flex min-w-0 flex-1 animate-[brew-rise_200ms_ease-out] items-center gap-3">
+        <CardHoverPreview card={swap.out}>
+          <button type="button" onClick={onInspect} aria-label={`Look at ${swap.out.name}`} className="w-11 shrink-0 rounded-[4.75%] sm:w-12">
+            <CardImage card={swap.out} size="small" className="shadow-sm" />
+          </button>
+        </CardHoverPreview>
+        <div className="min-w-0 flex-1">
+          <div className="ui-label text-xs text-pass">Swap out</div>
+          <div className="truncate font-heading text-lg leading-tight font-medium" data-testid="cut-name">
+            {swap.out.name}
+          </div>
+          {reason && <p className="truncate text-xs text-muted-foreground">{reason}</p>}
         </div>
-        {reason && <p className="truncate text-xs text-muted-foreground">{reason}</p>}
       </div>
       <Button variant="outline" size="sm" onClick={onKeep} title="Keep this card and cut another (K)">
         <ShieldCheckIcon /> Keep
@@ -453,7 +457,7 @@ function UpgradeCounter({ swaps, spent, budget }: { swaps: number; spent: number
       <div className="flex items-end justify-between">
         <div>
           <div className="numeral text-5xl" data-testid="swap-count">
-            {swaps}
+            <Tick value={swaps} />
           </div>
           <div className="ui-label mt-1 text-muted-foreground">{swaps === 1 ? "swap made" : "swaps made"}</div>
         </div>
@@ -529,7 +533,7 @@ function UpgradeSummary({
 
   return (
     <div className="panel flex w-full max-w-md flex-col items-center gap-4 p-6 text-center sm:p-8" data-testid="upgrade-summary">
-      {made.length > 0 && <CelebrationCauldron className="-mt-2 text-[4.5px]" />}
+      {made.length > 0 && <CelebrationCauldron className="-mt-2 text-[4.5px]" colors={deckIdentity(deck)} />}
       <h2 className="text-2xl font-medium">{made.length > 0 ? "A better match" : swapsLeft ? "No swaps yet" : "Nothing to swap"}</h2>
       <p className="text-muted-foreground">
         {made.length > 0
