@@ -25,6 +25,20 @@ export function trackCard(): QuizCard {
 export function nextCard(track: Track, swipes: QuizSwipe[]): QuizCard | null {
   const questions = QUESTIONS[track];
   let profile: QuizProfile | null = null;
+  return nextCardIn(questions, swipes, (o, answers) => affinity(o.effect, (profile ??= buildProfile(track, questions, answers))));
+}
+
+/**
+ * The next card of any question list, or null once every question is answered. `fit` ranks the open
+ * answers of a yes/no question (higher first, given the answers so far); without it they keep the
+ * order they are written in.
+ */
+export function nextCardIn(
+  questions: Question[],
+  swipes: QuizSwipe[],
+  fit?: (option: AnswerOption, answers: Answers) => number,
+): QuizCard | null {
+  let answers: Answers | null = null;
   for (const question of questions) {
     const own = swipes.filter((s) => s.question === question.id);
     // A card with the question's own id answers it whole (pick and versus cards).
@@ -44,10 +58,13 @@ export function nextCard(track: Track, swipes: QuizSwipe[]): QuizCard | null {
     const shown = new Set(own.map((s) => s.card));
     const open = question.options.filter((o) => !o.exclusive && !shown.has(yesNoId(question, o)));
     if (!open.length) continue;
-    profile ??= buildProfile(track, questions, answersOf(swipes));
-    const fit = (o: AnswerOption) => affinity(o.effect, profile!);
-    // Sort is stable: equally fitting answers keep the order they are written in.
-    const option = [...open].sort((a, b) => fit(b) - fit(a))[0];
+    let option = open[0];
+    if (fit) {
+      answers ??= answersOf(swipes);
+      const score = (o: AnswerOption) => fit(o, answers!);
+      // Sort is stable: equally fitting answers keep the order they are written in.
+      option = [...open].sort((a, b) => score(b) - score(a))[0];
+    }
     return { kind: "yesno", id: yesNoId(question, option), question, option };
   }
   return null;
@@ -78,13 +95,22 @@ export function answersOf(swipes: QuizSwipe[]): Answers {
 
 /** Position of the card's question in its track, for the progress bar. */
 export function deckProgress(track: Track, card: QuizCard): { step: number; total: number } {
-  const questions = QUESTIONS[track];
+  return progressIn(QUESTIONS[track], card);
+}
+
+/** Position of the card's question in a question list, for the progress bar. */
+export function progressIn(questions: Question[], card: QuizCard): { step: number; total: number } {
   return { step: questions.findIndex((q) => q.id === card.question.id) + 1, total: questions.length };
 }
 
 /** What the player said yes to, per question, in quiz order; follow-up answers come with their question. */
 export function pickedOptions(track: Track, answers: Answers): { question: Question; options: AnswerOption[] }[] {
-  return QUESTIONS[track].map((question) => ({
+  return pickedOptionsIn(QUESTIONS[track], answers);
+}
+
+/** `pickedOptions` for any question list. */
+export function pickedOptionsIn(questions: Question[], answers: Answers): { question: Question; options: AnswerOption[] }[] {
+  return questions.map((question) => ({
     question,
     options: [question, ...(question.followUp ? [question.followUp] : [])].flatMap((q) =>
       (answers[q.id] ?? []).map((id) => q.options.find((o) => o.id === id)).filter((o): o is AnswerOption => Boolean(o)),
@@ -105,7 +131,8 @@ function affinity(effect: AnswerEffect, profile: QuizProfile): number {
   return fit;
 }
 
-function versusCard(question: Question): QuizCard {
+/** The card for a versus question: its left, right and optional middle answers. */
+export function versusCard(question: Question): QuizCard {
   if (question.card.kind !== "versus") throw new Error(`${question.id} is not a versus question`);
   const option = (id: string) => question.options.find((o) => o.id === id)!;
   const { left, right, middle } = question.card;

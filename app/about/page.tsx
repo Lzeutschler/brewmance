@@ -3,10 +3,12 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { ArrowRightIcon, ArrowUpRightIcon } from "@/components/icons";
+import { JsonLd } from "@/components/json-ld";
 import { ExternalLink, Prose } from "@/components/legal/prose";
 import { Button } from "@/components/ui/button";
 import { canonical } from "@/lib/metadata";
 import { FEEDBACK, SITE } from "@/lib/site";
+import { personLd } from "@/lib/structured-data";
 import portrait from "@/public/about/leonard-zeutschler.jpg";
 
 export const metadata: Metadata = {
@@ -25,6 +27,7 @@ const LINKS = [
 export default function AboutPage() {
   return (
     <article className="mx-auto w-full max-w-3xl space-y-6 px-4 py-10 sm:py-14">
+      <JsonLd data={personLd({ sameAs: LINKS.map((link) => link.href) })} />
       <header className="flex flex-col items-center gap-6 text-center sm:flex-row sm:items-center sm:text-left">
         <Image
           src={portrait}

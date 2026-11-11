@@ -51,6 +51,9 @@ const nextConfig: NextConfig = {
     "/api/commander-insights": ["./data/recs-snapshot/*.json"],
     "/d/**": ["./data/*.json", "./app/fonts/og/*"],
     "/q/**": ["./data/*.json", "./app/fonts/og/*"],
+    // Precon pages render from the card database and the generated precon lists (lib/server/precons.ts);
+    // a slug that was not prerendered renders at request time and reads them from disk.
+    "/precons/**": ["./data/*.json", "./public/data/precons.json", "./public/data/precons/*.json", "./public/data/commanders.json"],
   },
   turbopack: {
     rules: {

@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   keywords: ["Magic: The Gathering", "MTG", "Commander", "EDH", "deckbuilding", "goldfish", "EDHREC"],
   authors: [{ name: "Leonard Zeutschler", url: "https://www.leonard-zeutschler.de/" }],
   openGraph: OPEN_GRAPH,
-  twitter: { card: "summary_large_image", title: SITE.name, description: SITE.description },
+  twitter: { card: "summary_large_image" },
   formatDetection: { telephone: false },
 };
 

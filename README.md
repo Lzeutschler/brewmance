@@ -16,6 +16,10 @@ like, and the deck keeps its mana curve, ramp, card draw and removal in balance 
 - **Upgrade:** start from a precon or a deck you already have. Each swipe is a swap: one card out, a better
   fit in, within a budget you set.
 - **Goldfish:** play the deck by yourself in a sandbox with mulligans, tokens, counters and undo.
+- **Precons:** look up any preconstructed Commander deck with its list, curve and bracket, or swipe through
+  a short quiz to find one to buy. A color quiz tells you which Magic colors suit you.
+- **Learn:** short guides for new players on the rules, deckbuilding, lands, color names and brackets, plus
+  a glossary.
 
 Decks can be imported, exported as a list and shared as a link.
 

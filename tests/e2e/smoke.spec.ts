@@ -271,3 +271,22 @@ test("upgrade a precon by swiping", async ({ page }) => {
   await expect(page.getByText("Deck size is legal")).toBeVisible();
   await expect(page.getByRole("link", { name: "Upgrade", exact: true }).last()).toBeVisible();
 });
+
+// A precon page opens the same deck in the upgrade flow.
+test("upgrade a precon from its page", async ({ page }) => {
+  await page.goto("/precons/virtue-and-valor-woc");
+  await expect(page.getByRole("heading", { level: 1, name: "Virtue and Valor" })).toBeVisible();
+  await page.getByRole("button", { name: "Upgrade this deck" }).click();
+  await expect(page.getByRole("heading", { name: "Upgrade Virtue and Valor" })).toBeVisible({ timeout: 30_000 });
+});
+
+// The color quiz runs to a result with the keyboard alone.
+test("answer the color quiz", async ({ page }) => {
+  await page.goto("/quiz/colors");
+  const result = page.getByText("Your colors", { exact: true });
+  for (let i = 0; i < 15 && !(await result.isVisible()); i++) {
+    await page.keyboard.press("ArrowLeft");
+    await page.waitForTimeout(250);
+  }
+  await expect(result).toBeVisible();
+});

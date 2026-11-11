@@ -5,7 +5,7 @@ import { DeckEditor } from "@/components/deck/deck-editor";
 import { canonical } from "@/lib/metadata";
 
 export async function generateMetadata({ params }: PageProps<"/decks/[deckId]">): Promise<Metadata> {
-  return { title: "Deck", ...canonical(`/decks/${(await params).deckId}`) };
+  return { title: "Deck", robots: { index: false, follow: true }, ...canonical(`/decks/${(await params).deckId}`) };
 }
 
 export default function DeckPage({ params }: PageProps<"/decks/[deckId]">) {

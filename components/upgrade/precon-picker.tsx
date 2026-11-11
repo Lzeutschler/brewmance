@@ -11,11 +11,10 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cardImageUrl } from "@/lib/cards/image";
 import { nameKey } from "@/lib/cards/names";
-import { fetchPreconList, resolveCardNames, usePrecons } from "@/lib/data/client";
-import { preconCardNames, preconDeck } from "@/lib/precons/deck";
+import { usePrecons } from "@/lib/data/client";
+import { ensurePreconDeck, missingCardsMessage, untouchedPreconDeck } from "@/lib/precons/open";
 import type { PreconSummary } from "@/lib/precons/types";
 import { cn } from "@/lib/utils";
-import { useDeckStore } from "@/stores/decks";
 
 const PAGE_SIZE = 12;
 
@@ -27,7 +26,6 @@ function searchText(text: string): string {
 export function PreconPicker() {
   const router = useRouter();
   const { data: precons, isLoading, error } = usePrecons();
-  const createDeck = useDeckStore((s) => s.createDeck);
   const [query, setQuery] = useState("");
   const [limit, setLimit] = useState(PAGE_SIZE);
   const [opening, setOpening] = useState<string | null>(null);
@@ -44,21 +42,16 @@ export function PreconPicker() {
   const open = async (precon: PreconSummary) => {
     if (opening) return;
     // A copy of this precon that was never touched opens again instead of piling up duplicates.
-    const untouched = Object.values(useDeckStore.getState().decks).find((d) => d.precon?.id === precon.id && d.updatedAt === d.createdAt);
+    const untouched = untouchedPreconDeck(precon.id);
     if (untouched) {
       router.push(`/upgrade/${untouched.id}`);
       return;
     }
     setOpening(precon.id);
     try {
-      const list = await fetchPreconList(precon.id);
-      const { cards } = await resolveCardNames(preconCardNames(list));
-      const deck = preconDeck(list, cards);
-      if (!deck) throw new Error(`Could not find the commander of ${precon.name}`);
-      const { missing, ...input } = deck;
-      const id = createDeck(input);
-      if (missing.length) toast.warning(`Left out ${missing.length} card(s) that are not Commander-legal: ${missing.slice(0, 3).join(", ")}`);
-      router.push(`/upgrade/${id}`);
+      const { deckId, missing } = await ensurePreconDeck(precon.id);
+      if (missing.length) toast.warning(missingCardsMessage(missing));
+      router.push(`/upgrade/${deckId}`);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Could not load this precon");
       setOpening(null);

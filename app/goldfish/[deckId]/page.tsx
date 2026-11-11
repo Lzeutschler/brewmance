@@ -5,7 +5,7 @@ import { GoldfishScreen } from "@/components/goldfish/goldfish-screen";
 import { canonical } from "@/lib/metadata";
 
 export async function generateMetadata({ params }: PageProps<"/goldfish/[deckId]">): Promise<Metadata> {
-  return { title: "Goldfish", ...canonical(`/goldfish/${(await params).deckId}`) };
+  return { title: "Goldfish", robots: { index: false, follow: true }, ...canonical(`/goldfish/${(await params).deckId}`) };
 }
 
 export default function GoldfishPage({ params }: PageProps<"/goldfish/[deckId]">) {

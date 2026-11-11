@@ -6,15 +6,23 @@ import { BrewScene } from "@/components/home/brew-scene";
 import { SwipeShowcase } from "@/components/home/swipe-showcase";
 import { WaysIn } from "@/components/home/ways-in";
 import { ArrowRightIcon } from "@/components/icons";
+import { JsonLd } from "@/components/json-ld";
 import { Button } from "@/components/ui/button";
 import { canonical } from "@/lib/metadata";
 import { SITE } from "@/lib/site";
+import { webApplicationLd, websiteLd } from "@/lib/structured-data";
 
-export const metadata: Metadata = canonical("/");
+export const metadata: Metadata = {
+  title: { absolute: `${SITE.name} · Build your first Commander deck by swiping` },
+  description:
+    "Find a commander with a short quiz, build your first Commander deck by swiping, upgrade a precon and test your deck on an empty table. Free, no account.",
+  ...canonical("/"),
+};
 
 export default function HomePage() {
   return (
     <div className="mx-auto w-full max-w-6xl space-y-16 px-4 pt-8 pb-12 sm:py-16">
+      <JsonLd data={[websiteLd(), webApplicationLd()]} />
       {/* Clipped sideways: the swiped cards fly out of the scene. The brew bubbles faster while the main button is hovered. */}
       <section className="grid items-center gap-10 overflow-x-clip has-[[data-cta]:focus-visible]:[--brew-bubble:0.9s] has-[[data-cta]:hover]:[--brew-bubble:0.9s] md:grid-cols-[1.2fr_1fr]">
         {/* On a phone the swipe stack comes right under the headline, then the buttons, then the pitch. */}

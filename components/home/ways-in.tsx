@@ -131,6 +131,12 @@ export function WaysIn() {
           </Link>
         ))}
       </div>
+      <Link
+        href="/learn"
+        className="ui-label mt-1 inline-flex min-h-10 items-center gap-1.5 text-muted-foreground hover:text-foreground"
+      >
+        New to Commander? Start here <ArrowRightIcon className="size-3.5" aria-hidden />
+      </Link>
     </section>
   );
 }

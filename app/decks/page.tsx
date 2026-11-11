@@ -8,7 +8,7 @@ import { PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
 import { canonical } from "@/lib/metadata";
 
-export const metadata: Metadata = { title: "My decks", ...canonical("/decks") };
+export const metadata: Metadata = { title: "My decks", robots: { index: false, follow: true }, ...canonical("/decks") };
 
 export default function DecksPage() {
   return (

@@ -3,7 +3,7 @@
 import Link from "next/link";
 
 import { ImportDialog } from "@/components/deck/import-dialog";
-import { UploadSimpleIcon } from "@/components/icons";
+import { ArrowRightIcon, UploadSimpleIcon } from "@/components/icons";
 import { PageHeader } from "@/components/page-header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -55,7 +55,15 @@ export function UpgradeHub() {
       )}
 
       <section className="space-y-4">
-        <h2 className="text-2xl font-medium">{own.length > 0 ? "Or start from a precon" : "Start from a precon"}</h2>
+        <div className="flex flex-wrap items-center justify-between gap-x-4">
+          <h2 className="text-2xl font-medium">{own.length > 0 ? "Or start from a precon" : "Start from a precon"}</h2>
+          <Link
+            href="/precons/find"
+            className="ui-label inline-flex min-h-10 items-center gap-1.5 text-muted-foreground hover:text-foreground"
+          >
+            Find your precon <ArrowRightIcon className="size-3.5" aria-hidden />
+          </Link>
+        </div>
         <PreconPicker />
       </section>
     </div>

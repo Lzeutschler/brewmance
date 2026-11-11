@@ -1,7 +1,7 @@
 import type { Question, Track } from "./types";
 
-/** Scryfall image keys for answer art (art crops of well-known cards). */
-const ART = {
+/** Scryfall image keys for answer art (art crops of well-known cards); other quizzes reuse them. */
+export const ART = {
   secureTheWastes: "8/3/83a01121-e5cd-45ba-97c2-7bd7d50158e6",
   embercleave: "a/a/aaae15dd-11b6-4421-99e9-365c7fe4a5d6",
   bloodArtist: "b/5/b5275d76-2947-4219-be21-614c7421614a",

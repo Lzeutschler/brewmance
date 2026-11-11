@@ -40,12 +40,15 @@ export function QuizSwipeCard({
   picked,
   onToggle,
   onSwipe,
+  testId = "quiz-card",
 }: {
   card: QuizCard;
   /** Picked option ids per question id, for pick cards. */
   picked: Record<string, string[]>;
   onToggle: (question: Pick<Question, "id" | "max" | "options">, optionId: string) => void;
   onSwipe: (direction: SwipeDirection) => void;
+  /** The card's test id; null leaves it out (other quizzes on the site). */
+  testId?: string | null;
 }) {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -73,7 +76,7 @@ export function QuizSwipeCard({
       exit="exit"
       transition={{ type: "spring", stiffness: 320, damping: 28 }}
       whileDrag={{ scale: 1.03 }}
-      data-testid="quiz-card"
+      data-testid={testId ?? undefined}
       data-card={card.id}
     >
       {card.kind === "yesno" && (

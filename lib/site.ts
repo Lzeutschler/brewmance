@@ -18,7 +18,7 @@ export const SITE = {
   tagline: "Swipe your way to a balanced, bracket-legal Commander deck",
   url: resolveSiteUrl(),
   description:
-    "Find your commander, swipe through cards while the deck stays balanced and within its bracket, then goldfish it — a free deckbuilding companion for Magic: The Gathering Commander.",
+    "Find a commander, build your first deck by swiping and test it on an empty table. Free, for Magic: The Gathering Commander.",
   themeColor: "#0b0e13",
 } as const;
 

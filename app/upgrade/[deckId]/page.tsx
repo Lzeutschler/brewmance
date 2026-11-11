@@ -5,7 +5,7 @@ import { UpgradeScreen } from "@/components/upgrade/upgrade-screen";
 import { canonical } from "@/lib/metadata";
 
 export async function generateMetadata({ params }: PageProps<"/upgrade/[deckId]">): Promise<Metadata> {
-  return { title: "Upgrade", ...canonical(`/upgrade/${(await params).deckId}`) };
+  return { title: "Upgrade", robots: { index: false, follow: true }, ...canonical(`/upgrade/${(await params).deckId}`) };
 }
 
 export default function UpgradeDeckPage({ params }: PageProps<"/upgrade/[deckId]">) {

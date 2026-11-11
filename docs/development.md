@@ -36,6 +36,22 @@ Decks are stored in the browser (localStorage); there are no accounts.
   play or tap, right-click for counters, tokens, flip and zone moves. London mulligan (first one free),
   scry/surveil/mill/search, commander tax, undo, keyboard shortcuts (D, U, N, S, M, ⌘Z) and an opening-hand
   simulator.
+- **Precons** (`/precons`, `/precons/<slug>`): every precon on its own static page, built at build time
+  from the precon lists and the card database only: commanders, themes, land count, mana curve, role counts
+  against the Core targets, the Game Changers and which bracket the printed list lands in, the decklist by
+  card type and related decks. "Upgrade this deck" and "Play a test hand" save the precon as a deck in the
+  browser. The index filters by color (`?colors=wu` for decks that play these colors, `?identity=wu` for
+  exactly these, `c` for colorless; read on the client) and by name.
+- **Precon finder** (`/precons/find`): a short swipe quiz (colors, side, world, creature size, pace, rules
+  text, age) that ranks the precons through their commanders' quiz scores plus points for the picked colors
+  and worlds, and shows the top three to five.
+- **Color quiz** (`/quiz/colors`): six swipe cards for people who have never played. The answers add up to
+  one to three colors, shown with their combination name, what each color values and links to precons in
+  those colors.
+- **Learn** (`/learn`): plain guides for new players (how to play, how to build a deck, how many lands,
+  color combinations, brackets) and a glossary whose anchors the other pages link to. The land calculator
+  uses the same Karsten formula as the deck builder; the bracket page reads its precon numbers and Game
+  Changer list from the local data.
 
 ## Getting started
 
@@ -107,15 +123,17 @@ The data is rebuilt when it is older than a week; `pnpm data` rebuilds it now.
 ```
 app/                 pages and API routes (api/candidates, api/commander-insights, api/cards/*), legal pages, metadata routes
 components/          UI: home/, build/ (commander + bracket picker), swipe/, upgrade/, quiz/, deck/ (editor), goldfish/, card/,
+                     precons/ (precon pages and finder), learn/ (guide layout and visuals),
                      ui/ (shadcn), legal/ (prose), icons.tsx (Phosphor + Mana font)
 lib/cards/           card types, names/slugs, mana helpers, image URLs
 lib/tagging/         roles (Tagger tags), commander themes, tribes and archetypes
 lib/quiz/            quiz questions, franchises and the commander scoring
 lib/deckbuilder/     deck template, bracket rules, scoring, swipe session, upgrade swaps, basic land fill
-lib/precons/         precon lists: MTGJSON condensing and turning a list into a deck
+lib/precons/         precon lists: MTGJSON condensing, turning a list into a deck, slugs, page analysis and text
+lib/learn.ts         the /learn registry; learn-glossary.ts holds the glossary entries
 lib/deck-io/         deck list import/export
 lib/goldfish/        pure game actions (zones, mulligan, tokens, …) and the opening-hand simulator
-lib/server/          server-only card database and candidate pool
+lib/server/          server-only card database, candidate pool and the cached precon page loaders
 lib/site.ts          site URL, description, feedback addresses and the provider details for Impressum and privacy policy
 stores/              decks.ts (persisted decks, swipe sessions and upgrades), game.ts (goldfish game with undo),
                      quiz.ts (persisted quiz answers and commander shortlist)
@@ -180,3 +198,14 @@ extend the CSP there and update the privacy policy (`app/datenschutz/page.tsx`).
 redirect there). Metadata, Open Graph and Twitter cards are set in `app/layout.tsx`; the social image
 (`app/opengraph-image.tsx`), favicon (`app/icon.svg`), Apple touch icon, `robots.txt`, `sitemap.xml` and
 the web app manifest are generated from `app/`.
+
+- **Structured data:** `components/json-ld.tsx` renders JSON-LD in the page body (the CSP allows inline
+  scripts, so pages stay prerendered); `lib/structured-data.ts` builds the objects (WebSite, WebApplication,
+  Article, BreadcrumbList, ItemList, DefinedTermSet, ProfilePage) with absolute URLs from `SITE.url`.
+- **Learn registry:** `lib/learn.ts` holds the title, description and update date of every `/learn` page.
+  Page metadata, breadcrumbs, the "More guides" links, the sitemap and the Article data all read it.
+- **Staged precon indexing:** precon pages released on or after `INDEX_FROM` (`lib/precons/slug.ts`) are in
+  the sitemap and indexable; older ones render the same but carry `noindex, follow`. Move the date back to
+  open more of them up.
+- **Browser-only pages:** `/decks` and the per-deck pages (`/build/<id>`, `/decks/<id>`, `/upgrade/<id>`,
+  `/goldfish/<id>`) and the share links (`/d`, `/q`) are `noindex` and not in the sitemap.

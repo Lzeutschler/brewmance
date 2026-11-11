@@ -4,12 +4,10 @@ import { SITE } from "@/lib/site";
 
 type OpenGraph = NonNullable<Metadata["openGraph"]>;
 
-/** Open Graph fields every page shares. */
+/** Open Graph fields every page shares. Title and description come from each page's own metadata. */
 export const OPEN_GRAPH = {
   type: "website",
   siteName: SITE.name,
-  title: SITE.name,
-  description: SITE.description,
   locale: "en_US",
 } satisfies OpenGraph;
 
