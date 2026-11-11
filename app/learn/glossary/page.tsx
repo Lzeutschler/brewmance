@@ -7,6 +7,7 @@ import { JsonLd } from "@/components/json-ld";
 import { LearnArticle } from "@/components/learn/learn-article";
 import { cardImageUrl } from "@/lib/cards/image";
 import { learnPage } from "@/lib/learn";
+import { DECK_STYLES } from "@/lib/learn-deck-styles";
 import { GLOSSARY, GLOSSARY_GROUPS, glossaryEntries, splitManaText, type GlossaryEntry } from "@/lib/learn-glossary";
 import { canonical } from "@/lib/metadata";
 import { definedTermSetLd } from "@/lib/structured-data";
@@ -29,7 +30,10 @@ export default function GlossaryPage() {
         data={definedTermSetLd({
           name: page.title,
           path: page.path,
-          terms: GLOSSARY.map((entry) => ({ id: entry.id, name: entry.term, description: entry.text })),
+          terms: [
+            ...GLOSSARY.map((entry) => ({ id: entry.id, name: entry.term, description: entry.text })),
+            ...DECK_STYLES.map((style) => ({ id: style.id, name: style.term, description: style.text })),
+          ],
         })}
       />
 
@@ -45,6 +49,14 @@ export default function GlossaryPage() {
               </a>
             </li>
           ))}
+          <li>
+            <a
+              href="#group-styles"
+              className="ui-label inline-flex min-h-9 items-center text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Deck styles
+            </a>
+          </li>
         </ul>
       </nav>
 
@@ -60,6 +72,28 @@ export default function GlossaryPage() {
           </dl>
         </section>
       ))}
+
+      <section aria-labelledby="group-styles" className="space-y-3">
+        <h2 id="group-styles" className="scroll-mt-20 text-2xl leading-tight font-medium">
+          Deck styles
+        </h2>
+        <p className="text-[0.9375rem] leading-relaxed text-muted-foreground">
+          The labels on a <Link href="/precons" className="text-foreground underline decoration-brand/60 underline-offset-2 hover:text-brand">precon page</Link>{" "}
+          say what the deck is built to do.
+        </p>
+        <dl className="panel divide-y divide-border/60 p-1">
+          {DECK_STYLES.map((style) => (
+            <div key={style.id} id={style.id} className="scroll-mt-20 space-y-1.5 rounded-md px-3 py-4 target:ring-1 target:ring-brand/60 sm:px-4">
+              <dt>
+                <a href={`#${style.id}`} className="font-heading text-xl leading-tight font-medium text-foreground hover:text-brand">
+                  {style.term}
+                </a>
+              </dt>
+              <dd className="text-[0.9375rem] leading-relaxed text-muted-foreground">{style.text}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
     </LearnArticle>
   );
 }

@@ -61,6 +61,17 @@ describe("precon quiz questions", () => {
     ]);
   });
 
+  it("offers Star Trek as its own world, with art, although the commander quiz does not ask about it", () => {
+    const withTrek = [...PRECONS, precon("Federation Fleet", "TRC", "2026-11-13", ["W", "U", "R"])];
+    expect(preconWorlds(withTrek)).toEqual(["magic", "final-fantasy", "warhammer", "star-trek"]);
+    const option = preconQuestions(withTrek).find((q) => q.id === "world")!.options.at(-1)!;
+    expect(option.label).toBe("Star Trek");
+    expect(option.art).toBeTruthy();
+    const ranked = rankPrecons(withTrek, COMMANDERS, { world: ["star-trek"] });
+    expect(ranked[0].precon.name).toBe("Federation Fleet");
+    expect(ranked[0].reasons[0]).toBe("From Star Trek");
+  });
+
   it("copies the commander quiz's answers instead of sharing them", () => {
     const side = questions.find((q) => q.id === "side")!;
     const original = QUESTIONS.beginner.find((q) => q.id === "side")!;
@@ -124,7 +135,28 @@ describe("rankPrecons", () => {
       commander({ name: "Only White Leader", colorIdentity: ["W"], cmc: 3, archetypes: { tokens: 0.5 }, edhrecRank: 9000 }),
       commander({ name: "White Blue Leader", colorIdentity: ["W", "U"], cmc: 3, archetypes: { tokens: 0.5 }, edhrecRank: 9000 }),
     ];
-    expect(names(rankPrecons(decks, leaders, { colors: ["W", "U"], size: ["big"] }))).toEqual(["White Blue", "Only White", "Green Fit"]);
+    const ranked = rankPrecons(decks, leaders, { colors: ["W", "U"], size: ["big"] });
+    expect(names(ranked)).toEqual(["White Blue", "Only White", "Green Fit"]);
+    // The percentage follows the rank: best first at 99, never rising further down.
+    expect(ranked[0].percent).toBe(99);
+    expect(ranked[1].percent).toBeLessThanOrEqual(ranked[0].percent);
+    expect(ranked[2].percent).toBeLessThanOrEqual(ranked[1].percent);
+  });
+
+  it("does not show a deck from the picked world as a 1% match just because it is the weakest of that world", () => {
+    const decks = [
+      precon("Fleet", "TRC", "2026-11-13", ["W", "U", "R"]),
+      precon("Fury", "TRC", "2026-11-13", ["R", "G"]),
+      ...PRECONS,
+    ];
+    const leaders = [
+      ...COMMANDERS,
+      commander({ name: "Fleet Leader", colorIdentity: ["W", "U", "R"], cmc: 3, archetypes: { tokens: 0.9 } }),
+      commander({ name: "Fury Leader", colorIdentity: ["R", "G"], cmc: 6, archetypes: { stompy: 0.9 } }),
+    ];
+    const ranked = rankPrecons(decks, leaders, { world: ["star-trek"], size: ["wide"] });
+    expect(names(ranked).slice(0, 2)).toEqual(["Fleet", "Fury"]);
+    expect(ranked[1].percent).toBeGreaterThan(40);
   });
 
   it("ignores colors when the player has no idea yet", () => {

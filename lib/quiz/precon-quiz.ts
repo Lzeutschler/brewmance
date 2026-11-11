@@ -174,6 +174,12 @@ export function preconFranchise(precon: Pick<PreconSummary, "set">): FranchiseId
   return franchiseOf(precon.set.toLowerCase());
 }
 
+/** Art for worlds the commander quiz does not ask about (Scryfall image keys). */
+const WORLD_ART: Partial<Record<FranchiseId, string>> = {
+  // Commander Spock
+  "star-trek": "c/f/cf114392-a38d-4117-aa41-911d6dc1051b",
+};
+
 function worldQuestion(precons: readonly Pick<PreconSummary, "set">[]): Question {
   const art = new Map(beginnerQuestion("world").options.map((o) => [o.id, o]));
   return {
@@ -186,7 +192,7 @@ function worldQuestion(precons: readonly Pick<PreconSummary, "set">[]): Question
     options: preconWorlds(precons).map((id) => {
       const option = art.get(id);
       const label = id === "magic" ? "Classic Magic worlds" : id === "marvel" ? "Marvel" : (option?.label ?? FRANCHISE_LABELS[id]);
-      return option ? copyOption(option, { label, description: undefined, effect: {} }) : { id, label, effect: {} };
+      return option ? copyOption(option, { label, description: undefined, effect: {} }) : { id, label, art: WORLD_ART[id], effect: {} };
     }),
   };
 }
@@ -270,6 +276,8 @@ export function rankPrecons<T extends PreconSummary>(
     // The commander that fits best speaks for the deck.
     let lead: CommanderSummary | null = null;
     let score = 0;
+    // Kept apart from the score, so the match percentage can compare decks across tiers.
+    let tier = 0;
     for (const name of precon.commanders) {
       const commander = byName.get(nameKey(name)) ?? byName.get(nameKey(frontFaceName(name)));
       if (!commander) continue;
@@ -288,7 +296,7 @@ export function rankPrecons<T extends PreconSummary>(
       const missing = picked.filter((c) => !identity.includes(c));
       score += hits.length * POINTS.colorHit - outside.length * POINTS.colorOutside - missing.length * POINTS.colorMissing;
       if (!hits.length) score -= POINTS.colorNone;
-      score -= colorTier(picked, identity) * TIER.color;
+      tier += colorTier(picked, identity) * TIER.color;
       if (hits.length && !outside.length && !missing.length) {
         reasons.push({ text: `${colorList(hits)}, like you picked`, weight: 3.5 });
       } else if (hits.length && !outside.length) {
@@ -301,7 +309,10 @@ export function rankPrecons<T extends PreconSummary>(
     // The world the deck is set in.
     const franchise = preconFranchise(precon);
     if (worlds.length) {
-      if (!worlds.includes(franchise)) score -= POINTS.franchiseMiss + TIER.world;
+      if (!worlds.includes(franchise)) {
+        score -= POINTS.franchiseMiss;
+        tier += TIER.world;
+      }
       else if (franchise === "magic") {
         score += POINTS.classicWorld;
         reasons.push({ text: "Set in a classic Magic world", weight: 0.8 });
@@ -331,7 +342,8 @@ export function rankPrecons<T extends PreconSummary>(
     }
 
     const texts = reasons.sort((a, b) => b.weight - a.weight).slice(0, 2).map((r) => r.text);
-    return { precon, score: Math.round(score * 10) / 10, reasons: texts.length ? texts : [`Released in ${year}`] };
+    const fit = Math.round(score * 10) / 10;
+    return { precon, score: fit - tier, fit, reasons: texts.length ? texts : [`Released in ${year}`] };
   });
 
   scored.sort(
@@ -341,11 +353,15 @@ export function rankPrecons<T extends PreconSummary>(
       a.precon.name.localeCompare(b.precon.name) ||
       a.precon.id.localeCompare(b.precon.id),
   );
-  const top = scored[0]?.score ?? 0;
-  // Percentages compare decks within the best tier; decks in lower tiers show as weak matches.
-  const band = scored.filter((s) => s.score > top - TIER.color / 2);
-  const bottom = band.at(-1)?.score ?? 0;
-  return scored.map((s) => ({ ...s, percent: matchPercent(s.score, top, bottom) }));
+  // The percentage is the fit without the tiers, measured against the best match and the weakest deck of all,
+  // and never higher than that of the deck ranked above.
+  const top = scored[0]?.fit ?? 0;
+  const bottom = Math.min(top, ...scored.map((s) => s.fit));
+  let ceiling = 99;
+  return scored.map(({ fit, ...match }) => {
+    ceiling = Math.min(ceiling, matchPercent(Math.min(fit, top), top, bottom));
+    return { ...match, percent: ceiling };
+  });
 }
 
 /** A score as a match percentage between the lowest (1) and the best (99) score. */

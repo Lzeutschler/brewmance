@@ -125,6 +125,7 @@ describe("scoring", () => {
     expect(franchiseOf("ltr")).toBe("lotr");
     expect(franchiseOf("spm")).toBe("marvel");
     expect(franchiseOf("dmu")).toBe("magic");
+    expect(franchiseOf("trc")).toBe("star-trek");
   });
 
   it("matches tempo through mana value", () => {

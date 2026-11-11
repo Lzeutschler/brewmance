@@ -10,7 +10,8 @@ export type FranchiseId =
   | "avatar"
   | "assassins-creed"
   | "transformers"
-  | "dnd";
+  | "dnd"
+  | "star-trek";
 
 export interface Franchise {
   id: FranchiseId;
@@ -35,6 +36,7 @@ export const FRANCHISES: Franchise[] = [
   { id: "assassins-creed", label: "Assassin's Creed", sets: ["acr"] },
   { id: "transformers", label: "Transformers", sets: ["bot"] },
   { id: "dnd", label: "Dungeons & Dragons", sets: ["afr", "afc", "clb", "hbg"] },
+  { id: "star-trek", label: "Star Trek", sets: ["trk", "trc"] },
 ];
 
 const FRANCHISE_BY_SET = new Map(FRANCHISES.flatMap((f) => f.sets.map((set) => [set, f.id] as const)));

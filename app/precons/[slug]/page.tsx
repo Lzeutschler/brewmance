@@ -19,6 +19,7 @@ import { Badge } from "@/components/ui/badge";
 import { identityName } from "@/lib/cards/colors";
 import { cardImageUrl } from "@/lib/cards/image";
 import { formatLearnDate, type GlossaryTermId } from "@/lib/learn";
+import { deckStyleLink } from "@/lib/learn-deck-styles";
 import { canonical } from "@/lib/metadata";
 import type { AnalysisRole, PreconAnalysis, PreconCommander } from "@/lib/precons/analysis";
 import {
@@ -168,11 +169,25 @@ function PreconView({ page, dataDate }: { page: PreconPage; dataDate: string | n
             <div className="space-y-2">
               <h2 className="ui-label text-muted-foreground">What it does</h2>
               <ul className="flex flex-wrap gap-1.5">
-                {themes.map((theme) => (
-                  <li key={theme.id}>
-                    <Badge variant="secondary">{theme.label}</Badge>
-                  </li>
-                ))}
+                {themes.map((theme) => {
+                  // Each label links to its explanation in the glossary, with the dotted underline of a `Term`; the tooltip shows it on hover.
+                  const style = deckStyleLink(theme.id);
+                  return (
+                    <li key={theme.id}>
+                      {style ? (
+                        <Badge
+                          variant="secondary"
+                          className="underline decoration-muted-foreground/60 decoration-dotted underline-offset-4 max-sm:h-8 max-sm:px-2.5"
+                          render={<Link href={style.href} title={style.text ?? undefined} />}
+                        >
+                          {theme.label}
+                        </Badge>
+                      ) : (
+                        <Badge variant="secondary">{theme.label}</Badge>
+                      )}
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           )}
