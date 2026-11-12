@@ -52,4 +52,4 @@ export const FEEDBACK = {
   reddit: null as string | null,
 };
 
-export const LEGAL_LAST_UPDATED = { de: "Oktober 2026", en: "October 2026" } as const;
+export const LEGAL_LAST_UPDATED = { de: "November 2026", en: "November 2026" } as const;

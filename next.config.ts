@@ -8,10 +8,12 @@ const vercelLive = isVercelPreview ? " https://vercel.live" : "";
 /**
  * Without nonces, so pages stay prerendered with Cache Components. Next.js inlines its bootstrap scripts and
  * Motion animates through inline styles, hence 'unsafe-inline'. React needs 'unsafe-eval' only in development.
+ * Vercel Web Analytics loads from /_vercel/insights on this origin; only its debug script in development comes
+ * from va.vercel-scripts.com.
  */
 const contentSecurityPolicy = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}${vercelLive}`,
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval' https://va.vercel-scripts.com" : ""}${vercelLive}`,
   `style-src 'self' 'unsafe-inline'${vercelLive}`,
   // Card images and mana symbols are loaded straight from Scryfall.
   `img-src 'self' data: blob: https://cards.scryfall.io https://svgs.scryfall.io${isVercelPreview ? " https://vercel.live https://vercel.com" : ""}`,

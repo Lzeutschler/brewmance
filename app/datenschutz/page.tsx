@@ -7,7 +7,7 @@ import { LEGAL_LAST_UPDATED, OPERATOR, SITE } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Datenschutz / Privacy",
-  description: `Privacy policy of ${SITE.name}: no accounts, no cookies, no tracking — what happens to your data.`,
+  description: `Privacy policy of ${SITE.name}: no accounts, no cookies, no ads — what happens to your data.`,
   ...canonical("/datenschutz"),
 };
 
@@ -49,7 +49,10 @@ function PrivacyDe() {
         Daten wie möglich verarbeiten:
       </p>
       <ul>
-        <li>Keine Nutzerkonten, keine Cookies, keine Analyse- oder Tracking-Dienste, keine Werbung.</li>
+        <li>
+          Keine Nutzerkonten, keine Cookies, keine Werbung. Für anonyme Besucherstatistiken nutze ich Vercel Web
+          Analytics, das ohne Cookies auskommt.
+        </li>
         <li>Ihre Decks und Swipe-Sitzungen bleiben im Speicher Ihres Browsers und werden nicht an mich übertragen.</li>
         <li>
           Beim Aufruf verarbeitet der Hoster Vercel technisch notwendige Verbindungsdaten. Kartenbilder und Mana-Symbole
@@ -78,8 +81,7 @@ function PrivacyDe() {
       <p>
         Dabei können Daten auch in den USA verarbeitet werden. Vercel ist unter dem EU-U.S. Data Privacy Framework
         zertifiziert, für das ein Angemessenheitsbeschluss der EU-Kommission besteht (Art. 45 DSGVO). Vercel hält die
-        Logdaten nur für begrenzte Zeit vor; ich werte sie nicht aus. Vercel Analytics oder Speed Insights nutze ich
-        nicht. Mehr dazu in der{" "}
+        Logdaten nur für begrenzte Zeit vor; ich werte sie nicht systematisch aus. Mehr dazu in der{" "}
         <ExternalLink href="https://vercel.com/legal/privacy-policy">Datenschutzerklärung von Vercel</ExternalLink>.
       </p>
 
@@ -117,26 +119,42 @@ function PrivacyDe() {
         indem Sie Decks in der App entfernen oder die Websitedaten in Ihrem Browser löschen.
       </p>
 
-      <h2>6. Keine Cookies, kein Tracking, lokale Schriftarten</h2>
+      <h2>6. Besucherstatistik (Vercel Web Analytics)</h2>
       <p>
-        Ich setze keine Cookies und keine Analyse-, Tracking- oder Werbedienste ein. Deshalb gibt es auch kein
-        Cookie-Banner: Es gibt nichts, wofür eine Einwilligung nötig wäre. Die Schriftarten (Inter, Cinzel) werden vom
-        eigenen Server geladen, nicht von Google oder anderen Anbietern.
+        Um zu sehen, wie viele Menschen die Website nutzen und welche Seiten aufgerufen werden, setze ich Vercel Web
+        Analytics ein. Das Skript wird von dieser Domain geladen und übermittelt bei jedem Seitenaufruf die aufgerufene
+        Seite, den Referrer, Datum und Uhrzeit, Browser, Betriebssystem, Gerätetyp und das aus der IP-Adresse
+        abgeleitete Land an Vercel. Es werden keine Cookies gesetzt und nichts in Ihrem Browser gespeichert. Besucher
+        werden nur über einen Hashwert aus der Anfrage unterschieden, der nach 24 Stunden verworfen wird; die IP-Adresse
+        wird dafür nicht gespeichert. Ich sehe nur zusammengefasste Zahlen, keine einzelnen Personen.
+      </p>
+      <p>
+        Rechtsgrundlage ist mein berechtigtes Interesse, die Nutzung der Website in anonymisierter Form auszuwerten und
+        sie zu verbessern (Art. 6 Abs. 1 lit. f DSGVO). Zu Vercel als Empfänger und zur Übermittlung in die USA siehe
+        Abschnitt 2. Sie können dieser Verarbeitung widersprechen (Art. 21 DSGVO) oder sie mit einem Content-Blocker
+        verhindern. Mehr dazu bei{" "}
+        <ExternalLink href="https://vercel.com/docs/analytics/privacy-policy">Vercel</ExternalLink>.
       </p>
 
-      <h2>7. Kontakt per E-Mail</h2>
+      <h2>7. Keine Cookies, lokale Schriftarten</h2>
+      <p>
+        Ich setze keine Cookies und keine Tracking- oder Werbedienste ein. Deshalb gibt es auch kein Cookie-Banner. Die
+        Schriftarten (Inter, Cinzel) werden vom eigenen Server geladen, nicht von Google oder anderen Anbietern.
+      </p>
+
+      <h2>8. Kontakt per E-Mail</h2>
       <p>
         Wenn Sie mir schreiben, nutze ich Ihre Angaben nur, um Ihre Nachricht zu beantworten (Art. 6 Abs. 1 lit. f
         DSGVO), und lösche sie, wenn sich die Sache erledigt hat.
       </p>
 
-      <h2>8. Links zu anderen Websites</h2>
+      <h2>9. Links zu anderen Websites</h2>
       <p>
         Links etwa zu Scryfall, EDHREC, LinkedIn oder GitHub sind einfache Links. Daten werden erst übertragen, wenn Sie
         darauf klicken; danach gilt die Datenschutzerklärung des jeweiligen Anbieters.
       </p>
 
-      <h2>9. Ihre Rechte</h2>
+      <h2>10. Ihre Rechte</h2>
       <p>
         Sie haben das Recht auf Auskunft (Art. 15 DSGVO), Berichtigung (Art. 16), Löschung (Art. 17), Einschränkung
         der Verarbeitung (Art. 18) und Datenübertragbarkeit (Art. 20). Außerdem können Sie Verarbeitungen auf Grundlage
@@ -152,7 +170,7 @@ function PrivacyDe() {
         <ExternalLink href="https://www.ldi.nrw.de" />
       </p>
 
-      <h2>10. Änderungen</h2>
+      <h2>11. Änderungen</h2>
       <p>
         Die Verbindung zur Website ist per TLS verschlüsselt. Ich passe diese Erklärung an, wenn sich die Website ändert;
         es gilt die hier veröffentlichte Fassung.
@@ -174,7 +192,7 @@ function PrivacyEn() {
         data as possible:
       </p>
       <ul>
-        <li>No user accounts, no cookies, no analytics or tracking services, no ads.</li>
+        <li>No user accounts, no cookies, no ads. Anonymous visitor statistics come from Vercel Web Analytics, which uses no cookies.</li>
         <li>Your decks and swipe sessions stay in your browser’s storage and are never sent to me.</li>
         <li>
           The host Vercel processes technically necessary connection data. Your browser loads card images and mana
@@ -195,7 +213,7 @@ function PrivacyEn() {
         system and amount of data. This is needed to deliver the site and protect it from attacks (legitimate interest,
         Art. 6(1)(f) GDPR). Data may be processed in the USA; Vercel is certified under the EU-U.S. Data Privacy
         Framework, which is covered by an adequacy decision (Art. 45 GDPR). Vercel keeps logs only for a limited time; I
-        do not analyse them, and I do not use Vercel Analytics or Speed Insights. More:{" "}
+        do not analyse them systematically. More:{" "}
         <ExternalLink href="https://vercel.com/legal/privacy-policy">Vercel privacy policy</ExternalLink>.
       </p>
 
@@ -226,25 +244,37 @@ function PrivacyEn() {
         no. 2 TDDDG, Art. 6(1)(f) GDPR). Delete decks in the app or clear the site data in your browser to remove them.
       </p>
 
-      <h3>6. No cookies, no tracking, local fonts</h3>
+      <h3>6. Visitor statistics (Vercel Web Analytics)</h3>
       <p>
-        I set no cookies and use no analytics, tracking or advertising services, which is why there is no cookie banner.
-        Fonts (Inter, Cinzel) are served from this site, not from Google or other providers.
+        To see how many people use the site and which pages they visit, I use Vercel Web Analytics. The script is
+        loaded from this domain and sends Vercel the page you open, the referrer, date and time, browser, operating
+        system, device type and the country derived from your IP address. It sets no cookies and stores nothing in your
+        browser. Visitors are told apart only by a hash of the request that is discarded after 24 hours; your IP address
+        is not stored for this. I only see aggregated numbers, never individual people. The legal basis is my legitimate
+        interest in evaluating use of the site in anonymised form to improve it (Art. 6(1)(f) GDPR); see section 2 for
+        Vercel and transfers to the USA. You can object (Art. 21 GDPR) or block it with a content blocker. More:{" "}
+        <ExternalLink href="https://vercel.com/docs/analytics/privacy-policy">Vercel</ExternalLink>.
       </p>
 
-      <h3>7. Email contact</h3>
+      <h3>7. No cookies, local fonts</h3>
+      <p>
+        I set no cookies and use no tracking or advertising services, which is why there is no cookie banner. Fonts
+        (Inter, Cinzel) are served from this site, not from Google or other providers.
+      </p>
+
+      <h3>8. Email contact</h3>
       <p>
         If you email me, I only use your details to reply (Art. 6(1)(f) GDPR) and delete them once the matter is
         settled.
       </p>
 
-      <h3>8. Links to other websites</h3>
+      <h3>9. Links to other websites</h3>
       <p>
         Links to Scryfall, EDHREC, LinkedIn, GitHub and others are plain links. Data is only transferred once you click
         one, and that provider’s privacy policy applies from then on.
       </p>
 
-      <h3>9. Your rights</h3>
+      <h3>10. Your rights</h3>
       <p>
         You have the right of access (Art. 15 GDPR), rectification (Art. 16), erasure (Art. 17), restriction of
         processing (Art. 18), data portability (Art. 20) and the <strong>right to object</strong> to processing based on
@@ -254,7 +284,7 @@ function PrivacyEn() {
         Düsseldorf, Germany (<ExternalLink href="https://www.ldi.nrw.de" />).
       </p>
 
-      <h3>10. Changes</h3>
+      <h3>11. Changes</h3>
       <p>
         Connections are TLS-encrypted. I update this policy when the site changes; the version published here applies.
       </p>
